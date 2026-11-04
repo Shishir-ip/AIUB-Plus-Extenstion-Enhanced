@@ -1,0 +1,987 @@
+import { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { FiRotateCcw, FiToggleLeft, FiToggleRight } from 'react-icons/fi';
+import '../../content.css';
+
+// Inject Tailwind CSS into the page 
+
+function injectCurriculumStyles() {
+  if (document.getElementById('__aiub_curriculum_styles')) return;
+  
+  const style = document.createElement('style');
+  style.id = '__aiub_curriculum_styles';
+  style.textContent = `
+    /* Backgrounds */
+    .bg-slate-50 { background-color: var(--apx-c-f8fafc) !important; }
+    .bg-slate-100 { background-color: var(--apx-c-f1f5f9) !important; }
+    .bg-slate-200 { background-color: var(--apx-c-e2e8f0) !important; }
+    .bg-blue-50 { background-color: var(--apx-c-eff6ff) !important; }
+    .bg-blue-100 { background-color: var(--apx-c-dbeafe) !important; }
+    .bg-blue-700 { background-color: var(--apx-c-1d4ed8) !important; }
+    .bg-red-50 { background-color: var(--apx-c-fef2f2) !important; }
+    .bg-red-100 { background-color: var(--apx-c-fee2e2) !important; }
+    .bg-green-50 { background-color: var(--apx-c-f0fdf4) !important; }
+    .bg-green-100 { background-color: var(--apx-c-dcfce7) !important; }
+    .bg-amber-50 { background-color: var(--apx-c-fffbeb) !important; }
+    .bg-amber-100 { background-color: var(--apx-c-fef3c7) !important; }
+    .bg-sky-50 { background-color: var(--apx-c-f0f9ff) !important; }
+    .bg-sky-100 { background-color: var(--apx-c-e0f2fe) !important; }
+    .bg-white { background-color: var(--apx-c-ffffff) !important; }
+    .bg-yellow-200 { background-color: var(--apx-c-fef08a) !important; }
+    .bg-white\/25 { background-color: var(--apx-ov-25) !important; }
+    
+    /* Text Colors */
+    .text-slate-300 { color: var(--apx-t-cbd5e1) !important; }
+    .text-slate-400 { color: var(--apx-t-94a3b8) !important; }
+    .text-slate-500 { color: var(--apx-t-64748b) !important; }
+    .text-slate-600 { color: var(--apx-t-475569) !important; }
+    .text-slate-700 { color: var(--apx-t-334155) !important; }
+    .text-slate-800 { color: var(--apx-t-1e293b) !important; }
+    .text-slate-900 { color: var(--apx-t-0f172a) !important; }
+    .text-blue-600 { color: var(--apx-t-2563eb) !important; }
+    .text-blue-700 { color: var(--apx-t-1d4ed8) !important; }
+    .text-blue-900 { color: var(--apx-t-1e3a8a) !important; }
+    .text-red-600 { color: var(--apx-t-dc2626) !important; }
+    .text-red-700 { color: var(--apx-t-b91c1c) !important; }
+    .text-green-600 { color: var(--apx-t-16a34a) !important; }
+    .text-green-700 { color: var(--apx-t-15803d) !important; }
+    .text-amber-800 { color: var(--apx-t-92400e) !important; }
+    .text-amber-900 { color: var(--apx-t-78350f) !important; }
+    .text-sky-700 { color: var(--apx-t-0369a1) !important; }
+    .text-white { color: var(--apx-t-ffffff) !important; }
+    
+    /* Borders */
+    .border { border-width: 1px !important; border-style: solid !important; }
+    .border-b { border-bottom-width: 1px !important; border-style: solid !important; }
+    .border-l { border-left-width: 1px !important; border-style: solid !important; }
+    .border-b-0 { border-bottom-width: 0 !important; }
+    .border-slate-100 { border-color: var(--apx-c-f1f5f9) !important; }
+    .border-slate-200 { border-color: var(--apx-c-e2e8f0) !important; }
+    .border-slate-300 { border-color: var(--apx-c-cbd5e1) !important; }
+    .border-blue-200 { border-color: var(--apx-c-bfdbfe) !important; }
+    .border-blue-700 { border-color: var(--apx-c-1d4ed8) !important; }
+    .border-yellow-200 { border-color: var(--apx-c-fef08a) !important; }
+    .border-red-100 { border-color: var(--apx-c-fee2e2) !important; }
+    .border-green-200 { border-color: var(--apx-c-bbf7d0) !important; }
+    .border-sky-200 { border-color: var(--apx-c-bae6fd) !important; }
+    .border-collapse { border-collapse: collapse !important; }
+    .border-l-\[3px\] { border-left-width: 3px !important; }
+    
+    /* Borders - specific colors */
+    .border-l-amber-500 { border-left-color: var(--apx-c-f59e0b) !important; }
+    .border-l-blue-600 { border-left-color: var(--apx-c-2563eb) !important; }
+    .border-l-green-600 { border-left-color: var(--apx-c-16a34a) !important; }
+    
+    /* Sizing */
+    .w-full { width: 100% !important; }
+    .w-2\.5 { width: 0.625rem !important; }
+    .h-2\.5 { height: 0.625rem !important; }
+    .min-w-\[150px\] { min-width: 150px !important; }
+    
+    /* Padding & Margin */
+    .p-0 { padding: 0 !important; }
+    .p-1 { padding: 0.25rem !important; }
+    .p-2 { padding: 0.5rem !important; }
+    .p-3 { padding: 0.75rem !important; }
+    .p-4 { padding: 1rem !important; }
+    .p-1\.5 { padding: 0.375rem !important; }
+    .px-1 { padding-left: 0.25rem !important; padding-right: 0.25rem !important; }
+    .px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+    .px-3 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+    .px-3\.5 { padding-left: 0.875rem !important; padding-right: 0.875rem !important; }
+    .py-0\.5 { padding-top: 0.125rem !important; padding-bottom: 0.125rem !important; }
+    .py-1 { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
+    .py-1\.5 { padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; }
+    .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+    .py-2\.5 { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+    .py-3 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+    .py-3\.5 { padding-top: 0.875rem !important; padding-bottom: 0.875rem !important; }
+    .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    .m-0 { margin: 0 !important; }
+    .mb-1 { margin-bottom: 0.25rem !important; }
+    .mb-1\.5 { margin-bottom: 0.375rem !important; }
+    .mb-2 { margin-bottom: 0.5rem !important; }
+    .mb-3 { margin-bottom: 0.75rem !important; }
+    .mb-4 { margin-bottom: 1rem !important; }
+    .mb-5 { margin-bottom: 1.25rem !important; }
+    .mb-6 { margin-bottom: 1.5rem !important; }
+    .mt-3\.5 { margin-top: 0.875rem !important; }
+    .mt-4 { margin-top: 1rem !important; }
+    .mt-5 { margin-top: 1.25rem !important; }
+    .ml-auto { margin-left: auto !important; }
+    .pb-3 { padding-bottom: 0.75rem !important; }
+    .pt-3 { padding-top: 0.75rem !important; }
+    
+    /* Display & Layout */
+    .flex { display: flex !important; }
+    .inline-flex { display: inline-flex !important; }
+    .inline-block { display: inline-block !important; }
+    .hidden { display: none !important; }
+    .grid { display: grid !important; }
+    .block { display: block !important; }
+    .flex-wrap { flex-wrap: wrap !important; }
+    .items-center { align-items: center !important; }
+    .justify-between { justify-content: space-between !important; }
+    .gap-1 { gap: 0.25rem !important; }
+    .gap-1\.5 { gap: 0.375rem !important; }
+    .gap-2 { gap: 0.5rem !important; }
+    .gap-3 { gap: 0.75rem !important; }
+    .gap-3\.5 { gap: 0.875rem !important; }
+    .gap-4 { gap: 1rem !important; }
+    
+    /* Rounded */
+    .rounded { border-radius: 0.25rem !important; }
+    .rounded-md { border-radius: 0.375rem !important; }
+    .rounded-lg { border-radius: 0.5rem !important; }
+    .rounded-xl { border-radius: 0.75rem !important; }
+    .rounded-full { border-radius: 9999px !important; }
+    
+    /* Font */
+    .font-mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace !important; }
+    .font-normal { font-weight: 400 !important; }
+    .font-semibold { font-weight: 600 !important; }
+    .font-bold { font-weight: 700 !important; }
+    .font-extrabold { font-weight: 800 !important; }
+    .uppercase { text-transform: uppercase !important; }
+    .whitespace-nowrap { white-space: nowrap !important; }
+    .leading-relaxed { line-height: 1.625 !important; }
+    .leading-snug { line-height: 1.375 !important; }
+    .leading-tight { line-height: 1.25 !important; }
+    .text-center { text-align: center !important; }
+    .text-left { text-align: left !important; }
+    .no-underline { text-decoration: none !important; }
+    
+    /* Text Size */
+    .text-\[10px\] { font-size: 10px !important; }
+    .text-\[11px\] { font-size: 11px !important; }
+    .text-\[12px\] { font-size: 12px !important; }
+    .text-\[13px\] { font-size: 13px !important; }
+    .text-\[14px\] { font-size: 14px !important; }
+    .text-\[15px\] { font-size: 15px !important; }
+    .text-\[16px\] { font-size: 16px !important; }
+    .text-\[26px\] { font-size: 26px !important; }
+    
+    /* Letter Spacing */
+    .tracking-wide { letter-spacing: 0.025em !important; }
+    .tracking-wider { letter-spacing: 0.05em !important; }
+    
+    /* Other */
+    .cursor-default { cursor: default !important; }
+    .cursor-pointer { cursor: pointer !important; }
+    .outline-none { outline: 2px solid transparent !important; outline-offset: 2px !important; }
+    .transition-all { transition-property: all !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; transition-duration: 150ms !important; }
+    .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; }
+    .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important; }
+    .flex-shrink-0 { flex-shrink: 0 !important; }
+    .hover\\:bg-slate-50:hover { background-color: var(--apx-c-f8fafc) !important; }
+    .hover\\:bg-blue-50:hover { background-color: var(--apx-c-eff6ff) !important; }
+    .hover\\:bg-amber-50\/60:hover { background-color: rgba(255, 251, 235, 0.6) !important; }
+    .hover\\:bg-indigo-50:hover { background-color: var(--apx-c-eef2ff) !important; }
+    .hover\\:bg-sky-100:hover { background-color: var(--apx-c-e0f2fe) !important; }
+    .hover\\:text-blue-700:hover { color: var(--apx-t-1d4ed8) !important; }
+    .hover\\:border-blue-200:hover { border-color: var(--apx-c-bfdbfe) !important; }
+    .hover\\:border-indigo-300:hover { border-color: var(--apx-c-a5d6fd) !important; }
+    .hover\\:shadow-md: hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important; }
+    .last\\:border-b-0:last-child { border-bottom-width: 0 !important; }
+    
+    /* Grid */
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    
+    /* Overflow */
+    .overflow-hidden { overflow: hidden !important; }
+    
+    /* Vertical Align */
+    .align-middle { vertical-align: middle !important; }
+  `;
+  
+  document.head.appendChild(style);
+}
+
+// Constants & helpers 
+
+const GRADE_BG = {
+  'A+': 'var(--apx-t-059669)', A: 'var(--apx-c-10b981)', 'B+': 'var(--apx-t-2563eb)', B: 'var(--apx-c-3b82f6)',
+  'C+': 'var(--apx-t-d97706)', C: 'var(--apx-c-f59e0b)', 'D+': 'var(--apx-t-dc2626)', D: 'var(--apx-c-ef4444)',
+  F: 'var(--apx-c-7f1d1d)', W: 'var(--apx-c-6b7280)', '-': 'var(--apx-t-7c3aed)',
+};
+
+const NIL_TOKENS = new Set(['', 'NIL', 'NILL', 'N/A', 'NA', '-']);
+let courseCatalog = [];
+const metaByName = new Map();
+const metaByCode = new Map();
+
+function norm(v) { return String(v || '').replace(/\s+/g, ' ').trim().toUpperCase(); }
+function normCode(v) { return norm(v).replace(/\s+/g, ''); }
+function normalizePrereqText(raw) {
+  const s = String(raw || '').trim();
+  if (!s || NIL_TOKENS.has(norm(s))) return 'Nil';
+  return s;
+}
+
+function buildCatalogIndex(items) {
+  items.forEach((item) => {
+    const nameKey = norm(item.course_name);
+    const codeKey = normCode(item.course);
+    if (nameKey && !metaByName.has(nameKey)) metaByName.set(nameKey, item);
+    if (codeKey && !metaByCode.has(codeKey)) metaByCode.set(codeKey, item);
+  });
+}
+
+function loadCourseCatalog() {
+  return fetch(chrome.runtime.getURL('Academic/CSE.json'))
+    .then((res) => (res.ok ? res.json() : []))
+    .then((items) => { if (Array.isArray(items)) { courseCatalog = items; buildCatalogIndex(items); } })
+    .catch(() => { courseCatalog = []; });
+}
+
+function findCourseMeta(code, name) {
+  const byName = metaByName.get(norm(name));
+  if (byName) return byName;
+  const byCode = metaByCode.get(normCode(code));
+  if (byCode) return byCode;
+  const nameKey = norm(name);
+  return courseCatalog.find((item) => {
+    const n = norm(item.course_name);
+    return n === nameKey || n.includes(nameKey) || nameKey.includes(n);
+  }) || null;
+}
+
+function prerequisiteListFromMeta(meta) {
+  if (!meta) return [];
+  if (Array.isArray(meta.prerequisites) && meta.prerequisites.length) return meta.prerequisites.map(String);
+  const raw = normalizePrereqText(meta.prerequisite);
+  if (raw === 'Nil') return [];
+  if (/\bCREDITS?\b/i.test(raw)) return [raw];
+  const codeMatches = raw.replace(/\s+/g, ' ').trim().match(/[A-Z]{2,4}\s*[0-9#*]{4}/gi);
+  if (codeMatches && codeMatches.length > 1) return codeMatches;
+  return raw.split(/\s*(?:,|&|\bAND\b)\s*/i).map((s) => s.trim()).filter(Boolean);
+}
+
+function findPrerequisite(code, name) {
+  const meta = findCourseMeta(code, name);
+  if (!meta) return 'Nil';
+  if (Array.isArray(meta.prerequisites) && meta.prerequisites.length) return meta.prerequisites.join(', ');
+  return normalizePrereqText(meta.prerequisite);
+}
+
+function parseCreditValue(raw) {
+  const m = String(raw || '').match(/\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+}
+
+function findCourseCredit(code, name) {
+  const meta = findCourseMeta(code, name);
+  return meta ? parseCreditValue(meta.credit) : 0;
+}
+
+function parseGrades(text) {
+  const out = [];
+  const re = /\(([^)]+)\)\s*\[([^\]]*)\]/g;
+  let m;
+  while ((m = re.exec(text)) !== null) out.push({ sem: m[1].trim(), grade: m[2].trim() || '-' });
+  return out;
+}
+
+function getState(grades) {
+  if (!grades.length) return 'nd';
+  const last = grades[grades.length - 1].grade;
+  if (last === '-') return 'ong';
+  if (last === 'W' || last === 'UW') return 'wdn';
+  if (last === 'F' || last === 'F*') return 'fail';
+  return 'done';
+}
+
+function parseInfo(tbl) {
+  const items = [];
+  tbl.querySelectorAll('tr').forEach((tr) => {
+    const tds = [...tr.querySelectorAll('td')];
+    if (tds[0] && tds[2]) items.push({ k: tds[0].textContent.trim(), v: tds[2].textContent.trim() });
+    if (tds[3] && tds[5]) items.push({ k: tds[3].textContent.trim(), v: tds[5].textContent.trim() });
+  });
+  return items;
+}
+
+function normalizeInfoKey(v) { return String(v || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function getInfoValue(items, keys) {
+  const wanted = new Set(keys.map(normalizeInfoKey));
+  for (const item of items) if (wanted.has(normalizeInfoKey(item.k))) return String(item.v || '').trim();
+  return '';
+}
+
+function extractNumber(text) {
+  const m = String(text || '').match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+}
+
+function addLockInfo(semSections, electiveRows) {
+  const allRows = [...semSections.flatMap((s) => s.rows), ...electiveRows];
+  const completedCodes = new Set(allRows.filter((r) => r.state === 'done' || r.state === 'ong').map((r) => normCode(r.code)));
+  allRows.forEach((r) => {
+    if (r.state === 'done' || r.state === 'ong') return;
+    const reqList = prerequisiteListFromMeta(findCourseMeta(r.code, r.name));
+    const missing = reqList.filter((req) => {
+      const n = normalizePrereqText(req);
+      if (n === 'Nil') return false;
+      if (/\bCREDITS?\b/i.test(n)) return true;
+      return !completedCodes.has(normCode(n));
+    });
+    r.locked = missing.length > 0;
+    r.missingPrereqs = missing;
+    r.prereqStatus = r.locked ? 'Locked' : 'Unlocked';
+    r.needToComplete = r.locked ? missing.join(', ') : '-';
+  });
+}
+
+// React components 
+
+function GradePill({ grades }) {
+  if (!grades.length) return <span className="text-[14px] text-slate-300">—</span>;
+  const last = grades[grades.length - 1];
+  const color = GRADE_BG[last.grade] || 'var(--apx-c-90a4ae)';
+  const label = last.grade === '-' ? 'Ongoing' : last.grade;
+  return <span className="text-[14px] font-extrabold" style={{ color }}>{label}</span>;
+}
+
+function SemLines({ grades }) {
+  if (!grades.length) return <span className="text-[13px] text-slate-300">—</span>;
+  return (
+    <div>
+      {grades.map((g, i) => (
+        <div key={i} className="text-[12px] text-slate-500 leading-relaxed">{g.sem}</div>
+      ))}
+    </div>
+  );
+}
+
+function LockBadge({ status }) {
+  const isLocked = status === 'Locked';
+  return (
+    <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style={{
+      background: isLocked 
+        ? 'linear-gradient(135deg, var(--apx-c-dc2626), var(--apx-c-991b1b))' 
+        : 'linear-gradient(135deg, var(--apx-c-10b981), var(--apx-c-059669))'
+    }}>
+      {isLocked ? '🔒 ' : '✓ '}{status}
+    </span>
+  );
+}
+
+function SemTable({ sec }) {
+  const [open, setOpen] = useState(true);
+  const isActive = sec.rows.some((r) => r.state === 'ong');
+
+  const rowBg = (state) => ({
+    ong:  'linear-gradient(135deg, var(--apx-c-faf5ff), var(--apx-c-ede9fe))',
+    wdn:  'linear-gradient(135deg, var(--apx-c-fff8f8), var(--apx-c-ffe4e6))',
+    nd:   'linear-gradient(135deg, var(--apx-c-f8fafc), var(--apx-c-f1f5f9))',
+    done: 'linear-gradient(135deg, var(--apx-c-f8fbff), var(--apx-c-eff6ff))',
+  }[state] || 'linear-gradient(135deg, var(--apx-c-f8fbff), var(--apx-c-eff6ff))');
+  const codeColor = (state) => ({ ong: 'var(--apx-c-7c3aed)', wdn: 'var(--apx-c-dc2626)', nd: 'var(--apx-c-94a3b8)', done: 'var(--apx-c-0284c7)' }[state] || 'var(--apx-c-0284c7)');
+
+  return (
+    <div
+      className="rounded-xl overflow-hidden mb-3 shadow-sm hover:shadow-md transition-all"
+    >
+      <div
+        className="flex justify-between items-center px-4 py-3 cursor-pointer select-none border-b border-sky-100"
+        style={{ background: 'linear-gradient(135deg, var(--apx-c-f0f9ff) 0%, var(--apx-c-e0f2fe) 100%)' }}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? 'bg-amber-400 shadow-sm' : 'bg-sky-200'}`} />
+          <span className="text-[16px] font-bold text-sky-900">{sec.label}</span>
+          {isActive && (
+            <span className="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-200 text-amber-900">Current</span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-[13px] font-semibold text-sky-700">{sec.rows.length} course{sec.rows.length !== 1 ? 's' : ''}</span>
+          <span className={`text-[11px] text-sky-600 transition-transform ${open ? 'rotate-180' : ''}`}>▼</span>
+        </div>
+      </div>
+      
+      {open && (
+        <div className="overflow-x-auto" style={{ background: 'linear-gradient(135deg, var(--apx-c-f8fbff) 0%, var(--apx-c-eff6ff) 100%)' }}>
+          <table className="w-full border-collapse text-[14px]">
+            <thead>
+              <tr style={{ background: 'linear-gradient(to right, var(--apx-c-e0f2fe), var(--apx-c-dbeafe))' }}>
+                {['Code', 'Course', 'Prerequisite', 'Semester Taken', 'Grade'].map((h, i) => (
+                  <th key={h} className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-wide text-sky-600 text-left" style={{ width: [null,'auto','25%','23%','8%'][i] }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sec.rows.map((r, i) => (
+                <tr key={i} style={{ background: rowBg(r.state) }} className="hover:brightness-95 transition-all">
+                  <td className="px-3 py-2.5 font-mono text-[13px] font-semibold whitespace-nowrap" style={{ color: codeColor(r.state) }}>{r.code}</td>
+                  <td className={`px-3 py-2.5 ${r.state === 'nd' ? 'text-slate-400' : 'text-slate-700'}`}>{r.name}</td>
+                  <td className="px-3 py-2.5 text-[13px] text-slate-500 leading-snug">{r.prerequisite || 'Nil'}</td>
+                  <td className="px-3 py-2.5"><SemLines grades={r.grades} /></td>
+                  <td className="px-3 py-2.5 text-center"><GradePill grades={r.grades} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NotAttemptedSection({ semSections, electiveRows, departmentName }) {
+  const isCSE = departmentName === 'BScCSE';
+  const [enabled, setEnabled] = useState(() => {
+    if (!isCSE) return false;
+    return localStorage.getItem('aiub_show_na') !== 'false';
+  });
+  const [open, setOpen] = useState(() => {
+    if (!isCSE) return false;
+    return localStorage.getItem('aiub_show_na') !== 'false';
+  });
+  const [activeTab, setActiveTab] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showAllUnlocked, setShowAllUnlocked] = useState(false);
+
+  const tabs = [];
+  semSections.forEach((sec, i) => {
+    const incomplete = sec.rows.filter((r) => r.state === 'nd' || r.state === 'wdn' || r.state === 'fail');
+    if (incomplete.length) tabs.push({ label: sec.label || `Semester ${i + 1}`, rows: incomplete });
+  });
+  const electiveNA = electiveRows.filter((r) => r.state === 'nd' || r.state === 'wdn' || r.state === 'fail');
+  if (electiveNA.length) tabs.push({ label: 'Elective', rows: electiveNA });
+
+  // Search across all courses
+  const allCourses = [...semSections.flatMap((s) => s.rows), ...electiveRows];
+  const searchResults = searchQuery.trim() 
+    ? allCourses.filter((r) => 
+        r.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  if (!tabs.length && !searchResults.length) {
+    return (
+      <div className="rounded-xl p-4 mb-6 border-2" style={{ background: 'var(--apx-c-f0fdf4)', borderColor: 'var(--apx-t-10b981)' }}>
+        <div className="text-center text-white text-[14px] font-extrabold rounded-lg py-4" style={{ background: 'var(--apx-c-10b981)' }}>
+          ✅ All courses completed!
+        </div>
+      </div>
+    );
+  }
+
+  const total = tabs.reduce((s, t) => s + t.rows.length, 0);
+  const cur = tabs[activeTab] || tabs[0];
+
+  // Determine status badge and color for search results
+  const getStatusBadge = (row) => {
+    if (row.state === 'done') return { label: 'Completed', color: 'var(--apx-t-10b981)', bgColor:'var(--apx-t-f0fdf4)' };
+    if (row.state === 'ong') return { label: 'Ongoing', color: 'var(--apx-t-2563eb)', bgColor:'var(--apx-t-eff6ff)' };
+    if (row.state === 'wdn') return { label: 'Withdrawn', color: 'var(--apx-t-dc2626)', bgColor:'var(--apx-t-fef2f2)' };
+    if (row.state === 'fail') return { label: 'Failed', color: 'var(--apx-t-dc2626)', bgColor:'var(--apx-t-fef2f2)' };
+    if (row.locked) return { label: 'Locked', color: 'var(--apx-t-dc2626)', bgColor:'var(--apx-t-fef2f2)' };
+    return { label: 'Unlocked', color: 'var(--apx-t-10b981)', bgColor:'var(--apx-t-f0fdf4)' };
+  };
+
+  const toggleEnable = (e) => {
+    e.stopPropagation();
+    if (!isCSE) return;
+    const val = !enabled;
+    setEnabled(val);
+    localStorage.setItem('aiub_show_na', val);
+    if (!val) setOpen(false);
+  };
+
+  return (
+    <div className={`rounded-xl overflow-hidden mb-6 shadow-sm transition-all border-2 ${enabled ? 'hover:shadow-md' : 'opacity-70'}`} style={{ background: enabled ? 'var(--apx-c-fffbeb)' : 'var(--apx-c-f8fafc)', borderColor: enabled ? 'var(--apx-c-fbbf24)' : 'var(--apx-c-e2e8f0)' }}>
+      <div
+        className="flex justify-between items-center px-4 py-3 select-none transition-colors"
+        style={{ 
+          background: enabled ? 'linear-gradient(135deg, var(--apx-c-fef3c7) 0%, var(--apx-c-fde68a) 100%)' : 'var(--apx-c-f1f5f9)',
+          cursor: enabled ? 'pointer' : 'default'
+        }}
+        onClick={() => enabled && setOpen((v) => !v)}
+      >
+        <div className="flex items-center gap-2">
+          <span className={`text-[16px] font-bold transition-colors ${enabled ? 'text-amber-900' : 'text-slate-500'}`}>⏳ Not Attempted Yet</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className={`text-[13px] font-semibold transition-colors ${enabled ? 'text-amber-700' : 'text-slate-400'}`}>{total} course{total !== 1 ? 's' : ''}</span>
+          
+          {isCSE && (
+            <div onClick={toggleEnable} className="cursor-pointer flex items-center ml-2 transition-transform hover:scale-110" title={enabled ? "Disable section" : "Enable section"}>
+              {enabled ? <FiToggleRight size={24} style={{ color: 'var(--apx-t-10b981)' }} /> : <FiToggleLeft size={24} style={{ color: 'var(--apx-t-ef4444)' }} />}
+            </div>
+          )}
+
+          {enabled && (
+            <span className={`text-[11px] transition-transform ${enabled ? 'text-amber-700' : 'text-slate-400'} ${open ? 'rotate-180' : ''}`}>▼</span>
+          )}
+        </div>
+      </div>
+
+      {enabled && open && (
+        <div className="p-4 pt-5 border-t" style={{ borderColor: 'var(--apx-t-fcd34d)' }}>
+          {/* Search Input & Filter */}
+          <div className="mb-4 flex gap-3">
+        <div style={{ position: 'relative', flex: 1 }}>
+          <input
+            type="text"
+            placeholder="Search courses by code or name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-5 text-[13px] outline-none transition-all h-[42px]"
+            style={{
+              borderRadius: '21px',
+              border: '1px solid rgba(251, 191, 36, 0.4)',
+              background: 'var(--apx-c-ffffff)',
+              paddingRight: '2.5rem',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+            }}
+            onFocus={(e) => { e.target.style.borderColor='var(--apx-t-f59e0b)'; e.target.style.boxShadow = '0 2px 8px rgba(245, 158, 11, 0.15)'; }}
+            onBlur={(e) => { e.target.style.borderColor = 'rgba(251, 191, 36, 0.4)'; e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)'; }}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="cursor-pointer text-slate-400 font-bold"
+              style={{
+                position: 'absolute',
+                right: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                fontSize: '16px',
+                lineHeight: 1,
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+              }}
+              title="Clear search"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        
+        <button
+          onClick={() => setShowAllUnlocked(!showAllUnlocked)}
+          className="px-5 text-[13px] font-bold transition-all flex-shrink-0 flex items-center gap-2 h-[42px] outline-none cursor-pointer"
+          style={{
+            borderRadius: '21px',
+            border: showAllUnlocked ? '1px solid var(--apx-c-f59e0b)' : '1px solid rgba(251, 191, 36, 0.4)',
+            background: showAllUnlocked ? 'var(--apx-c-f59e0b)' : 'var(--apx-c-ffffff)',
+            color: showAllUnlocked ? 'var(--apx-c-ffffff)' : 'var(--apx-c-475569)',
+            boxShadow: showAllUnlocked ? '0 2px 8px rgba(245, 158, 11, 0.25)' : '0 2px 4px rgba(0,0,0,0.02)'
+          }}
+          onMouseEnter={(e) => { if(!showAllUnlocked) e.target.style.background = 'var(--apx-c-fef3c7)'; }}
+          onMouseLeave={(e) => { if(!showAllUnlocked) e.target.style.background = 'var(--apx-c-ffffff)'; }}
+        >
+          {showAllUnlocked ? (
+            <><span className="text-[14px]">✓</span> All Unlocked</>
+          ) : (
+            'All Unlocked'
+          )}
+        </button>
+
+        <button
+          onClick={() => {
+            setSearchQuery('');
+            setShowAllUnlocked(false);
+            setActiveTab(0);
+          }}
+          className="px-5 text-[13px] font-bold transition-all flex-shrink-0 flex items-center justify-center gap-2 h-[42px] outline-none cursor-pointer"
+          style={{
+            borderRadius: '21px',
+            border: '1px solid rgba(203, 213, 225, 0.6)',
+            background: 'var(--apx-c-ffffff)',
+            color: 'var(--apx-t-64748b)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+          }}
+          onMouseEnter={(e) => { e.target.style.background = 'var(--apx-c-fef2f2)'; e.target.style.color='var(--apx-t-dc2626)'; e.target.style.borderColor='var(--apx-t-fca5a5)'; }}
+          onMouseLeave={(e) => { e.target.style.background = 'var(--apx-c-ffffff)'; e.target.style.color='var(--apx-t-64748b)'; e.target.style.borderColor = 'rgba(203, 213, 225, 0.6)'; }}
+          title="Reset all filters"
+        >
+          <FiRotateCcw size={14} style={{ marginTop: '-1px' }} />
+          Reset
+        </button>
+      </div>
+
+      {/* Search Results */}
+      {searchResults.length > 0 && (
+        <div className="mb-4 border border-slate-200 rounded-lg overflow-hidden">
+          <table className="w-full border-collapse text-[13px]">
+            <thead>
+              <tr style={{ background: 'var(--apx-c-fef3c7)' }}>
+                {['Code', 'Course Name', 'Prerequisite', 'Status', 'Lock Status', 'Need To Complete'].map((h) => (
+                  <th key={h} className="px-3 py-3 text-[11px] font-extrabold uppercase tracking-wider text-amber-900">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {searchResults.map((r, i) => {
+                const statusBadge = getStatusBadge(r);
+                return (
+                  <tr key={i} className="hover:bg-amber-50/60">
+                    <td className="px-3 py-2 font-mono text-[13px] font-semibold text-slate-700">{r.code}</td>
+                    <td className="px-3 py-2 text-[13px] text-slate-700">{r.name}</td>
+                    <td className="px-3 py-2 text-[13px] text-slate-500 leading-snug">{r.prerequisite || 'Nil'}</td>
+                    <td className="px-3 py-2 text-center">
+                      <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: statusBadge.color }}>
+                        {r.state === 'ong' ? '▶ Ongoing' : r.state === 'done' ? '✓ Completed' : r.state === 'wdn' ? '✕ Withdrawn' : r.state === 'fail' ? '✕ Failed' : ''}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 text-center">
+                      {(r.state === 'nd' || r.state === 'wdn' || r.state === 'fail') ? (
+                        <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style={{ background: r.locked ? 'var(--apx-c-dc2626)' : 'var(--apx-c-10b981)' }}>
+                          {r.locked ? '🔒 Locked' : '✓ Unlocked'}
+                        </span>
+                      ) : (
+                        <span className="text-[12px] text-slate-400">—</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 text-[12px] text-slate-600">
+                      {(r.state === 'nd' || r.state === 'wdn' || r.state === 'fail') && r.locked ? (
+                        <span className="text-red-600 font-semibold">{r.needToComplete || 'Check prerequisites'}</span>
+                      ) : (
+                        <span className="text-slate-400">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* All Unlocked View */}
+      {showAllUnlocked && !searchResults.length && (
+        <div className="flex flex-col gap-5 mb-2">
+          {tabs.map((t, i) => {
+            const unlockedRows = t.rows.filter((r) => !r.locked && !r.code.includes('****') && !r.code.includes('####'));
+            if (!unlockedRows.length) return null;
+            return (
+              <div key={i} className="border border-slate-200 rounded-lg overflow-hidden bg-white/50">
+                <div className="px-4 py-2.5 border-b border-slate-100 flex items-center gap-2" style={{ background: 'var(--apx-c-fefce8)' }}>
+                  <span className="text-[14px] font-bold text-amber-900">{t.label}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md">
+                    {unlockedRows.length} Course{unlockedRows.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+                <table className="w-full border-collapse text-[13px]">
+                  <thead>
+                    <tr style={{ background: 'var(--apx-c-fffdf7)' }}>
+                      {['Code', 'Course Name', 'Prerequisite', 'Status'].map((h, idx) => (
+                        <th key={h} className="px-3 py-2.5 text-[11px] font-extrabold uppercase tracking-wider text-amber-800/70 border-b border-slate-100 text-left" style={{ width: ['15%', 'auto', '30%', '15%'][idx] }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {unlockedRows.map((r, j) => (
+                      <tr key={j} className="hover:bg-amber-50/60 border-b border-slate-50 last:border-none">
+                        <td className="px-3 py-2.5 font-mono text-[13px] font-semibold text-slate-600">{r.code}</td>
+                        <td className="px-3 py-2.5 text-[13px] text-slate-600">{r.name}</td>
+                        <td className="px-3 py-2.5 text-[13px] text-slate-400 leading-snug">{r.prerequisite || 'Nil'}</td>
+                        <td className="px-3 py-2.5 text-center"><LockBadge status={r.prereqStatus || 'Unlocked'} /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+          {tabs.every(t => t.rows.filter(r => !r.locked && !r.code.includes('****') && !r.code.includes('####')).length === 0) && (
+            <div className="text-center py-6 text-slate-500 font-medium bg-white/50 rounded-lg border border-slate-200">
+              No unlocked courses available at this time.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tabs */}
+      {!searchResults.length && !showAllUnlocked && (
+        <>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {tabs.map((t, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveTab(i)}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-semibold cursor-pointer transition-all outline-none border ${
+                  i === activeTab
+                    ? 'text-amber-900 border-yellow-200 shadow-sm'
+                    : 'text-slate-700 border-slate-300 hover:bg-amber-50/60'
+                }`}
+                style={i === activeTab ? { background: 'var(--apx-c-fef3c7)' } : { background: 'var(--apx-c-fffdf7)' }}
+              >
+                {t.label}
+                <span
+                  className={`rounded-full text-[11px] font-bold px-2.5 py-0.5 ${i === activeTab ? 'text-amber-900' : 'text-slate-700'}`}
+                  style={i === activeTab ? { background: 'var(--apx-c-fde68a)' } : { background: 'var(--apx-c-f1f5f9)' }}
+                >
+                  {t.rows.length}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {cur && (
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <table className="w-full border-collapse text-[14px]">
+                <thead>
+                  <tr style={{ background: 'var(--apx-c-fef3c7)' }}>
+                    {['Code', 'Course Name', 'Prerequisite', 'Status', 'Need To Complete'].map((h) => (
+                      <th key={h} className="px-3 py-3 text-[11px] font-extrabold uppercase tracking-wider text-amber-900">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {cur.rows.map((r, i) => (
+                    <tr key={i} className="hover:bg-amber-50/60">
+                      <td className="px-3 py-2.5 font-mono text-[13px] font-semibold text-slate-600">{r.code}</td>
+                      <td className="px-3 py-2.5 text-[13px] text-slate-600">{r.name}</td>
+                      <td className="px-3 py-2.5 text-[13px] text-slate-400 leading-snug">{r.prerequisite || 'Nil'}</td>
+                      <td className="px-3 py-2.5 text-center"><LockBadge status={r.prereqStatus || 'Unlocked'} /></td>
+                      <td className="px-3 py-2.5 text-[12px] text-slate-400">{r.needToComplete || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InfoGrid({ items }) {
+  const isCgpa = (k) => /^cgpa$/i.test(k.replace(/\s/g, ''));
+  const getCardStyle = (k) => {
+    if (isCgpa(k)) return { border: 'var(--apx-c-0ea5e9)', bg: 'linear-gradient(135deg, var(--apx-c-f0f9ff) 0%, var(--apx-c-e0f2fe) 100%)', label: 'var(--apx-c-0284c7)' };
+    if (/^student\s*id$/i.test(k.replace(/\s/g, ''))) return { border: 'var(--apx-c-34d399)', bg: 'linear-gradient(135deg, var(--apx-c-f0fdf4) 0%, var(--apx-c-dcfce7) 100%)', label: 'var(--apx-c-059669)' };
+    return { border: 'var(--apx-c-93c5fd)', bg: 'linear-gradient(135deg, var(--apx-c-f8fbff) 0%, var(--apx-c-eff6ff) 100%)', label: 'var(--apx-c-2563eb)' };
+  };
+  return (
+    <div className="grid gap-3 mb-6" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      {items.map(({ k, v }) => {
+        const s = getCardStyle(k);
+        return (
+          <div key={k} className="px-4 py-4 rounded-xl hover:shadow-md transition-all cursor-default shadow-sm" style={{ background: s.bg }}>
+            <div className="text-[11px] uppercase tracking-wider font-bold mb-2" style={{ color: s.label }}>{k}</div>
+            {isCgpa(k) ? (
+              <div className="text-[32px] font-extrabold leading-tight" style={{ color: 'var(--apx-t-059669)' }}>{v || '—'}</div>
+            ) : (
+              <div className="text-[15px] font-semibold text-slate-700">{v || '—'}</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ElectiveSection({ electiveRows }) {
+  const [open, setOpen] = useState(true);
+  const isActive = electiveRows.some((c) => c.state === 'ong');
+
+  return (
+    <div
+      className="rounded-xl overflow-hidden mb-3 shadow-sm hover:shadow-md transition-all mt-6"
+    >
+      <div
+        className="flex justify-between items-center px-4 py-3 cursor-pointer select-none"
+        style={{ background: 'linear-gradient(135deg, var(--apx-c-059669) 0%, var(--apx-c-10b981) 100%)', boxShadow: '0 2px 8px rgba(16,185,129,0.25)' }}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? 'bg-amber-300' : 'bg-white/40'}`} />
+          <span className="text-[16px] font-bold text-white">Elective Curriculum</span>
+          {isActive && (
+            <span className="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md bg-amber-300 text-emerald-900">Current</span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-[13px] text-white/80">{electiveRows.length} course{electiveRows.length !== 1 ? 's' : ''}</span>
+          <span className={`text-[11px] text-white/70 transition-transform ${open ? 'rotate-180' : ''}`}>▼</span>
+        </div>
+      </div>
+      
+      {open && (
+        <div className="overflow-x-auto" style={{ background: 'linear-gradient(135deg, var(--apx-c-f0fdf4) 0%, var(--apx-c-dcfce7) 100%)' }}>
+          <table className="w-full border-collapse text-[14px]">
+            <thead>
+              <tr style={{ background: 'linear-gradient(to right, var(--apx-c-d1fae5), var(--apx-c-a7f3d0))' }}>
+                {['Code', 'Course', 'Prerequisite', 'Semester Taken', 'Grade'].map((h) => (
+                  <th key={h} className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700 text-left">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {electiveRows.map((r, i) => {
+                const rowBg =
+                  r.state === 'ong' ? 'linear-gradient(135deg, var(--apx-c-faf5ff), var(--apx-c-ede9fe))' :
+                  r.state === 'wdn' ? 'linear-gradient(135deg, var(--apx-c-fff8f8), var(--apx-c-ffe4e6))' :
+                  r.state === 'nd'  ? 'linear-gradient(135deg, var(--apx-c-f8fafc), var(--apx-c-f1f5f9))' :
+                  'linear-gradient(135deg, var(--apx-c-f0fdf4), var(--apx-c-dcfce7))';
+                return (
+                  <tr key={i} style={{ background: rowBg }} className="hover:brightness-95 transition-all">
+                    <td className="px-3 py-2.5 font-mono text-[13px] font-semibold text-emerald-700">{r.code}</td>
+                    <td className={`px-3 py-2.5 ${r.state === 'nd' ? 'text-slate-400' : 'text-slate-700'}`}>{r.name}</td>
+                    <td className="px-3 py-2.5 text-[13px] text-slate-500">{r.prerequisite || 'Nil'}</td>
+                    <td className="px-3 py-2.5"><SemLines grades={r.grades} /></td>
+                    <td className="px-3 py-2.5 text-center"><GradePill grades={r.grades} /></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CurriculumGradeReport({ infoItems, semSections, electiveRows, printHref, departmentName }) {
+  return (
+    <div className="text-[15px] text-slate-800 py-4 px-1 aiub-custom-grade-table" style={{ boxSizing: 'border-box' }}>
+      <style>{`.aiub-custom-grade-table table td, .aiub-custom-grade-table table th { border: none !important; }`}</style>
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-6 pb-4" style={{ borderBottom: '1px solid var(--apx-c-e2e8f0)' }}>
+        <h2 className="text-[26px] font-extrabold text-blue-800 tracking-tight m-0">
+          Student Grade Report
+        </h2>
+        {printHref && (
+          <a
+            href={printHref}
+            className="text-[11px] font-semibold text-white rounded-lg px-3 py-2 no-underline transition-all shadow-sm hover:shadow-md whitespace-nowrap border"
+            style={{ background: 'linear-gradient(to right, var(--apx-c-0284c7), var(--apx-c-0369a1))', borderColor: 'var(--apx-t-0369a1)' }}
+          >
+            🖨 Print
+          </a>
+        )}
+      </div>
+
+      <InfoGrid items={infoItems} />
+
+      {/* Not attempted section */}
+      <NotAttemptedSection semSections={semSections} electiveRows={electiveRows} departmentName={departmentName} />
+
+      {/* Core curriculum */}
+      <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-sky-900 rounded-lg px-4 py-2.5 mb-3 mt-6 shadow-sm border border-sky-100" style={{ background: 'linear-gradient(135deg, var(--apx-c-f0f9ff) 0%, var(--apx-c-e0f2fe) 100%)' }}>
+        📚 Core Curriculum {departmentName ? `(${departmentName})` : ''}
+      </div>
+      {semSections.map((sec, i) => <SemTable key={i} sec={sec} />)}
+
+      {/* Elective curriculum */}
+      {electiveRows.length > 0 && <ElectiveSection electiveRows={electiveRows} />}
+
+      {/* Legend */}
+      <div className="flex flex-wrap gap-5 mt-6 pt-3 border-t border-slate-100">
+        {[['var(--apx-c-7c3aed)','Ongoing'],['var(--apx-c-059669)','Completed'],['var(--apx-c-dc2626)','Withdrawn'],['var(--apx-c-94a3b8)','Not Attempted']].map(([c, l]) => (
+          <div key={l} className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0" style={{ background: c }} />
+            <span className="text-[11px] text-slate-500">{l}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+(function mount() {
+  if (window.__aiubGradeCurrMounted) return;
+  if (!window.location.href.includes('/Student/GradeReport/ByCurriculum')) return;
+
+  chrome.storage.sync.get({ extensionEnabled: true, featureToggles: {} }, (r) => {
+    if (!r.extensionEnabled || r.featureToggles?.['gradeReport'] === false) return;
+
+    function init() {
+      const gr = document.querySelector('.grade-report');
+      if (!gr) { setTimeout(init, 400); return; }
+      if (window.__aiubGradeCurrMounted) return;
+      window.__aiubGradeCurrMounted = true;
+
+      // Inject CSS styles into the page
+      injectCurriculumStyles();
+
+      const rootPanel = gr.closest('.panel');
+      if (rootPanel) {
+        rootPanel.style.cssText = 'box-shadow: none!important;border: none!important;background: transparent!important;margin-bottom:0!important';
+        const heading = rootPanel.querySelector('.panel-heading');
+        if (heading) heading.style.display = 'none';
+        const pb = rootPanel.querySelector('.panel-body');
+        if (pb) pb.style.cssText = 'padding:0!important;background: transparent!important';
+      }
+
+      const printLink = document.querySelector('a[href*="PrintGradeReport"]');
+      const printHref = printLink?.getAttribute('href') || null;
+      const safePrint = printHref && /^[/?#]/.test(printHref) ? printHref : null;
+
+      let infoItems = null;
+      let inElective = false;
+      let semLabel = null;
+      const semSections = [];
+      const electiveRows = [];
+
+      for (const el of [...gr.children]) {
+        const tag = el.tagName;
+        if (tag === 'TABLE' && !infoItems) {
+          infoItems = parseInfo(el);
+        } else if (tag === 'DIV' && el.classList.contains('text-center')) {
+          if (el.textContent.toLowerCase().includes('elective')) inElective = true;
+        } else if (tag === 'LABEL') {
+          semLabel = el.textContent.trim();
+        } else if (tag === 'TABLE' && infoItems) {
+          const rows = [...el.querySelectorAll('tbody tr')].slice(1).map((tr) => {
+            const tds = [...tr.querySelectorAll('td')];
+            if (tds.length < 3) return null;
+            const code = tds[0].textContent.trim();
+            const name = tds[1].textContent.trim();
+            const grades = parseGrades(tds[2].textContent);
+            return { code, name, credit: findCourseCredit(code, name), grades, prerequisite: findPrerequisite(code, name), state: getState(grades) };
+          }).filter(Boolean);
+
+          if (inElective) electiveRows.push(...rows);
+          else { semSections.push({ label: semLabel || '', rows }); semLabel = null; }
+        }
+      }
+
+      addLockInfo(semSections, electiveRows);
+      
+      let departmentName = '';
+      if (infoItems) {
+        const coreItem = infoItems.find(item => item.k && item.k.trim().toUpperCase() === 'CORE');
+        if (coreItem && coreItem.v) {
+          departmentName = coreItem.v.split(',')[0].trim();
+        }
+      }
+      console.log('Department:', departmentName);
+
+      gr.innerHTML = '';
+      const container = document.createElement('div');
+      gr.appendChild(container);
+      createRoot(container).render(
+        <CurriculumGradeReport
+          infoItems={infoItems || []}
+          semSections={semSections}
+          electiveRows={electiveRows}
+          printHref={safePrint}
+          departmentName={departmentName}
+        />
+      );
+    }
+
+    loadCourseCatalog().finally(() => {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    });
+  });
+})();

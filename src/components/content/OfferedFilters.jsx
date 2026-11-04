@@ -1,0 +1,201 @@
+import '../../content.css';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import OfferedCoursesFilter from '../content/OfferedCoursesFilter';
+
+// OfferedFilters runs in MAIN world — chrome.storage is NOT available here.
+// contentBridge (ISOLATED world) resolves the state and:
+//   a) sets document.documentElement[data-aiub-ext] synchronously (read here if already set)
+//   b) dispatches __aiubExt:state event (caught here if not yet set when we run)
+if (!window.__aiubFilterInjected) {
+  window.__aiubFilterInjected = true;
+
+  const ATTR = 'data-aiub-ext';
+  const ATTR_FEATURES = 'data-aiub-features';
+
+  function checkFeatureAndInit(featuresObj) {
+    if (featuresObj && featuresObj.offeredFilters === false) return;
+    init();
+  }
+
+  const current = document.documentElement.getAttribute(ATTR);
+  const currentFeatures = document.documentElement.getAttribute(ATTR_FEATURES);
+
+  if (current !== null) {
+    if (current === '1') {
+      let features = {};
+      try { features = JSON.parse(currentFeatures || '{}'); } catch(e) {}
+      checkFeatureAndInit(features);
+    }
+  } else {
+    document.addEventListener('__aiubExt:state', (e) => {
+      if (e.detail.enabled) checkFeatureAndInit(e.detail.features);
+    }, { once: true });
+  }
+}
+
+
+function waitForTable() {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+    const check = () => {
+      const table = document.querySelector('table.footable');
+      if (table && table.querySelector('tbody tr td')) { resolve(); }
+      else if (attempts >= 60) { reject(new Error('FooTable not found after 30s')); }
+      else { attempts++; setTimeout(check, 500); }
+    };
+    check();
+  });
+}
+
+function parseRowElements(rows) {
+  const courses = [];
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 3) return;
+    const classId = cells[0].textContent.trim();
+    if (!classId || !/^\d+$/.test(classId)) return;
+
+    const fullTitle = cells[1]?.textContent.trim() || '';
+    const status    = cells[2]?.textContent.trim() || '';
+    const capacity  = parseInt(cells[3]?.textContent.trim(), 10) || 0;
+    const count     = parseInt(cells[4]?.textContent.trim(), 10) || 0;
+
+    const timeSlots = [];
+    if (cells[5]) {
+      cells[5].querySelectorAll('table tbody tr').forEach(tr => {
+        const tc = tr.querySelectorAll('td');
+        if (tc.length >= 3) timeSlots.push({
+          classType: tc[0]?.textContent.trim() || '',
+          day:       tc[1]?.textContent.trim() || '',
+          startTime: tc[2]?.textContent.trim() || '',
+          endTime:   tc[3]?.textContent.trim() || '',
+          room:      tc[4]?.textContent.trim() || '',
+        });
+      });
+    }
+
+    const sectionMatch = fullTitle.match(/\[([^\]]+)\]$/);
+    const section = sectionMatch ? sectionMatch[1] : '';
+    const title   = fullTitle.replace(/\s*\[[^\]]+\]$/, '').trim();
+
+    courses.push({ classId, title, section, fullTitle, status, capacity, count, timeSlots });
+  });
+  return courses;
+}
+
+function whenDrawDone(result) {
+  return new Promise(resolve => {
+    if (!result) { setTimeout(resolve, 600); return; }
+    if (typeof result.then === 'function') { result.then(resolve, resolve); return; }
+    if (typeof result.done === 'function') { result.done(resolve).fail(resolve); return; }
+    setTimeout(resolve, 600);
+  });
+}
+
+async function getAllCourses() {
+  const table = document.querySelector('table.footable');
+  let courses = [];
+
+  if (typeof FooTable !== 'undefined' && FooTable.get) {
+    try {
+      const ft = FooTable.get(table);
+      if (ft?.rows?.all?.length > 0) {
+        const hidden = [];
+        ft.rows.all.forEach(row => {
+          const el = row.$el?.[0];
+          if (el && el.style.display === 'none') { hidden.push(el); el.style.display = ''; }
+        });
+        courses = parseRowElements(table.querySelectorAll('tbody > tr'));
+        hidden.forEach(el => { el.style.display = 'none'; });
+        if (courses.length > 10) return courses;
+      }
+    } catch (e) { console.warn('[AIUB Filter] rows.all failed:', e); }
+
+    try {
+      const ft = FooTable.get(table);
+      const paging = ft?.use?.(FooTable.Paging);
+      if (paging?.size != null) {
+        const origSize = paging.size, origCurrent = paging.current || 1;
+        paging.size = 99999;
+        await whenDrawDone(ft.draw());
+        courses = parseRowElements(table.querySelectorAll('tbody > tr'));
+        paging.size = origSize; paging.current = origCurrent; ft.draw();
+        if (courses.length > origSize) return courses;
+      }
+    } catch (e) { console.warn('[AIUB Filter] expand failed:', e); }
+  }
+
+  courses = parseRowElements(table.querySelectorAll('tbody > tr'));
+  console.log('[AIUB Filter] DOM fallback:', courses.length);
+  return courses;
+}
+
+// Wrapper Component 
+function FilterWrapper({ originalPanel }) {
+  const [courses, setCourses] = React.useState([]);
+  const [statuses, setStatuses] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    // Yield the main thread to allow the Sidebar and Filter UI to paint first
+    setTimeout(() => {
+      getAllCourses().then(data => {
+        if (!isMounted) return;
+        setCourses(data);
+        setStatuses([...new Set(data.map(c => c.status))].filter(Boolean).sort());
+        setIsLoading(false);
+        console.log('[AIUB Filter] Parsed', data.length, 'courses');
+      }).catch(err => {
+        console.error('[AIUB Filter] Failed to fetch courses:', err);
+        if (isMounted) setIsLoading(false);
+      });
+    }, 150);
+    return () => { isMounted = false; };
+  }, []);
+
+  return (
+    <OfferedCoursesFilter
+      allCourses={courses}
+      statuses={statuses}
+      originalPanel={originalPanel}
+      isLoading={isLoading}
+    />
+  );
+}
+
+// Mount 
+async function init() {
+  try {
+    await waitForTable();
+
+    const mainContent = document.getElementById('main-content') || document.body;
+    const mountPoint  = document.createElement('div');
+    mountPoint.id     = 'aiub-filter-root';
+    mountPoint.style.cssText = 'margin-bottom:18px;';
+
+    const originalPanel =
+      mainContent.querySelector('.panel.panel-default') ||
+      mainContent.querySelector('.panel.panel-primary') ||
+      mainContent.querySelector('.panel') ||
+      mainContent.querySelector('table.footable');
+
+    if (originalPanel && originalPanel.parentNode === mainContent) {
+      mainContent.insertBefore(mountPoint, originalPanel);
+    } else {
+      mainContent.insertBefore(mountPoint, mainContent.firstChild);
+    }
+
+    const root = createRoot(mountPoint);
+    root.render(
+      <React.StrictMode>
+        <FilterWrapper originalPanel={originalPanel} />
+      </React.StrictMode>
+    );
+
+    console.log('[AIUB Filter] React component mounted instantly');
+  } catch (err) {
+    console.error('[AIUB Filter] Init failed:', err);
+  }
+}

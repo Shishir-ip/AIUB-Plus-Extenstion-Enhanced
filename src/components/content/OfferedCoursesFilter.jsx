@@ -1,0 +1,934 @@
+import { useState, useEffect, useMemo, useRef } from 'react';
+import html2canvas from 'html2canvas';
+import { FiCalendar, FiX, FiChevronDown, FiList, FiTrash2, FiZap, FiDownload, FiFileText, FiRefreshCw, FiClock, FiRepeat, FiCheck, FiSave, FiSearch } from 'react-icons/fi';
+
+// Constants 
+
+const ALL_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+
+const ROUTINE_COLORS = [
+  { border: 'var(--apx-c-1d4ed8)', bg: 'linear-gradient(135deg, var(--apx-c-eff6ff), var(--apx-c-dbeafe))' },
+  { border: 'var(--apx-c-7e22ce)', bg: 'linear-gradient(135deg, var(--apx-c-faf5ff), var(--apx-c-f3e8ff))' },
+  { border: 'var(--apx-c-15803d)', bg: 'linear-gradient(135deg, var(--apx-c-f0fdf4), var(--apx-c-dcfce7))' },
+  { border: 'var(--apx-c-c2410c)', bg: 'linear-gradient(135deg, var(--apx-c-fff7ed), var(--apx-c-ffedd5))' },
+  { border: 'var(--apx-c-b91c1c)', bg: 'linear-gradient(135deg, var(--apx-c-fef2f2), var(--apx-c-fee2e2))' },
+  { border: 'var(--apx-c-0f766e)', bg: 'linear-gradient(135deg, var(--apx-c-f0fdfa), var(--apx-c-ccfbf1))' },
+  { border: 'var(--apx-c-4338ca)', bg: 'linear-gradient(135deg, var(--apx-c-eef2ff), var(--apx-c-e0e7ff))' },
+  { border: 'var(--apx-c-be185d)', bg: 'linear-gradient(135deg, var(--apx-c-fdf2f8), var(--apx-c-fce7f3))' },
+];
+
+// Pure helpers 
+function timeToMinutes(str) {
+  const m = (str || '').trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return null;
+  let h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10), p = m[3].toUpperCase();
+  if (p === 'PM' && h !== 12) h += 12;
+  if (p === 'AM' && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+function slotsOverlap(a, b) {
+  if (a.day !== b.day) return false;
+  const [s1, e1, s2, e2] = [timeToMinutes(a.startTime), timeToMinutes(a.endTime), timeToMinutes(b.startTime), timeToMinutes(b.endTime)];
+  if (!s1 || !e1 || !s2 || !e2) return false;
+  return s1 < e2 && s2 < e1;
+}
+
+function timeSignature(course) {
+  return (course.timeSlots || []).map(ts => `${ts.day}|${ts.startTime}|${ts.endTime}|${ts.classType}`).sort().join(';;');
+}
+
+function checkClash(course, selected) {
+  for (const sel of selected) {
+    for (const ns of course.timeSlots) {
+      for (const ss of sel.timeSlots) {
+        if (slotsOverlap(ns, ss)) return { hasClash: true, clashWith: sel.fullTitle, details: `${ns.day} ${ns.startTime}–${ns.endTime} overlaps ${ss.day} ${ss.startTime}–${ss.endTime}` };
+      }
+    }
+  }
+  return { hasClash: false };
+}
+
+const colorCache = {};
+let colorIdx = 0;
+function courseColor(title) {
+  if (!colorCache[title]) colorCache[title] = ROUTINE_COLORS[colorIdx++ % ROUTINE_COLORS.length];
+  return colorCache[title];
+}
+
+function hexToRgba(hex, opacity) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+function loadSaved() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem('aiub_selectedSections') || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+function getLooseSig(c) {
+  return (c.timeSlots || []).map(ts => `${ts.day}|${ts.startTime}`).sort().join(';;');
+}
+
+function getLinkedSections(course, allCourses) {
+  if (!allCourses || !allCourses.length) return [];
+  const mySig = getLooseSig(course);
+  return allCourses
+    .filter(c => 
+      c.title === course.title && 
+      c.classId !== course.classId && 
+      c.status.toLowerCase().includes('open') && 
+      getLooseSig(c) === mySig
+    )
+    .map(({ section, classId, capacity, count, timeSlots }) => ({ section, classId, capacity, count, timeSlots }));
+}
+
+// Sub-components 
+
+const GRAD = {
+  blue:    'linear-gradient(135deg,var(--apx-c-1e3a8a),var(--apx-c-2563eb))',
+  sky:     'linear-gradient(135deg,var(--apx-c-eef2f9),var(--apx-c-f8fafc))',
+  bodyBg:  'var(--apx-c-ffffff)',
+  pageFt:  'linear-gradient(to right,var(--apx-c-f0f9ff),var(--apx-c-eff6ff))',
+};
+
+function StatusBadge({ status }) {
+  const s = (status || '').toLowerCase();
+  const [bg, color] =
+    s.includes('freshman')  ? ['linear-gradient(135deg,var(--apx-c-dbeafe),var(--apx-c-bfdbfe))', 'var(--apx-c-1e40af)'] :
+    s.includes('sophomore') ? ['linear-gradient(135deg,var(--apx-c-d1fae5),var(--apx-c-a7f3d0))', 'var(--apx-c-065f46)'] :
+    s.includes('junior')    ? ['linear-gradient(135deg,var(--apx-c-ede9fe),var(--apx-c-ddd6fe))', 'var(--apx-c-5b21b6)'] :
+    s.includes('senior')    ? ['linear-gradient(135deg,var(--apx-c-fef3c7),var(--apx-c-fde68a))', 'var(--apx-c-92400e)'] :
+                              ['linear-gradient(135deg,var(--apx-c-f1f5f9),var(--apx-c-e2e8f0))', 'var(--apx-c-374151)'];
+  return (
+    <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide"
+      style={{ background: bg, color }}>
+      {status}
+    </span>
+  );
+}
+
+function SeatsBadge({ available }) {
+  if (available <= 0)
+    return <span className="inline-block text-[11px] font-bold" style={{ color: 'var(--apx-t-dc2626)' }}>FULL</span>;
+  return <span className="inline-block text-[11px] font-bold" style={{ color: 'var(--apx-t-059669)' }}>{available} seats</span>;
+}
+
+function SlotPills({ timeSlots }) {
+  if (!timeSlots?.length) return null;
+  return (
+    <div className="flex flex-col gap-1.5">
+      {timeSlots.map((ts, i) => (
+        <div key={i} className="flex items-center gap-2 text-[11px] px-2.5 py-1.5 rounded-lg transition-colors hover:bg-slate-50"
+          style={{ background: 'var(--apx-c-f8fafc)', border: '1px solid var(--apx-c-e2e8f0)', width: 'max-content' }}>
+          <span className="font-bold text-slate-700" style={{ width: '26px' }}>{ts.day.slice(0, 3)}</span>
+          <span className="text-slate-600 font-medium" style={{ whiteSpace: 'nowrap' }}>{ts.startTime} - {ts.endTime}</span>
+          {ts.room && (
+            <span className="font-mono text-[10px] text-slate-600 px-1.5 py-0.5 rounded bg-white" style={{ border: '1px solid var(--apx-c-cbd5e1)', marginLeft: '4px' }}>
+              {ts.room}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ActionBtn({ course, selected, clashMap, onSelect, onRemove }) {
+  const isSelected    = selected.some(s => s.classId === course.classId);
+  const sameCourseSel = selected.find(s => s.title === course.title && s.classId !== course.classId);
+  const clash         = clashMap[course.classId];
+  const base          = 'text-[11px] font-bold px-1 py-1.5 rounded-lg text-white transition-all text-center';
+  const width         = '70px';
+
+  if (isSelected)
+    return <button onClick={() => onRemove(course.classId)} className={`${base} hover:shadow-md hover:-translate-y-px`} style={{ width, background: 'linear-gradient(135deg,var(--apx-c-dc2626),var(--apx-c-ef4444))', border: 'none', boxShadow: '0 2px 6px rgba(220,38,38,0.2)' }}>Remove</button>;
+
+  if (sameCourseSel) {
+    // Check if this section clashes specifically with the selected section of the same course
+    const clashesWithSame = course.timeSlots.some(ns =>
+      sameCourseSel.timeSlots.some(ss => slotsOverlap(ns, ss))
+    );
+    if (clashesWithSame)
+      return <button disabled title="This section has a similar schedule to the one you already added" className={`${base}`} style={{ width, background: 'linear-gradient(135deg,var(--apx-c-f59e0b),var(--apx-c-d97706))', cursor: 'not-allowed', opacity: 0.9, border: 'none' }}>Similar</button>;
+    return <button disabled className={`${base}`} style={{ width, background: 'linear-gradient(135deg,var(--apx-c-4b5563),var(--apx-c-6b7280))', cursor: 'default', border: 'none' }}>Added</button>;
+  }
+
+  if (clash?.hasClash)
+    return <button disabled title={`${clash.clashWith} — ${clash.details}`} className={`${base}`} style={{ width, background: 'linear-gradient(135deg,var(--apx-c-dc2626),var(--apx-c-ef4444))', cursor: 'not-allowed', opacity: 0.85, border: 'none' }}>Clash</button>;
+
+  const high = course.count >= 35;
+  return (
+    <button onClick={() => onSelect(course.classId)} className={`${base} hover:shadow-md hover:-translate-y-px`}
+      style={{ width, background: high ? 'linear-gradient(135deg,var(--apx-c-b45309),var(--apx-c-d97706))' : GRAD.blue, boxShadow: '0 2px 6px rgba(37,99,235,0.2)', border: 'none' }}>
+      Select
+    </button>
+  );
+}
+
+function SelectedCard({ sec, allCourses, selected, onRemove }) {
+  const col = courseColor(sec.title);
+  const avail = sec.capacity - sec.count;
+  
+  const _linked = useMemo(() => getLinkedSections(sec, allCourses), [sec, allCourses]);
+
+  return (
+    <div className="relative rounded-2xl border transition-all duration-200 hover:-translate-y-1"
+      style={{ background: 'var(--apx-c-ffffff)', borderColor: 'var(--apx-t-e2e8f0)', boxShadow: '0 4px 24px rgba(0,0,0,0.03)', padding: '20px', minWidth: '280px', flex: '1 1 280px', maxWidth: '400px' }}>
+
+      {/* Header with course title */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '16px', paddingRight: '28px' }}>
+        <div style={{ width: '4px', height: '20px', borderRadius: '4px', background: col.border, flexShrink: 0, marginTop: '2px' }} />
+        <div className="text-[14px] font-bold text-slate-800 leading-snug flex-1">{sec.fullTitle}</div>
+      </div>
+
+      {/* Time slots */}
+      <div className="flex flex-col gap-2 mb-5">
+        {sec.timeSlots.map((ts, i) => (
+          <div key={i} className="flex items-center gap-2 text-[11px]"
+            style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--apx-c-f8fafc)', border: '1px solid var(--apx-c-f1f5f9)' }}>
+            <span className="font-bold text-slate-700">{ts.day.slice(0, 3)}</span>
+            <span className="text-slate-600 font-medium">{ts.startTime}–{ts.endTime}</span>
+            {ts.room && (
+              <span style={{ marginLeft: 'auto', fontFamily: 'ui-monospace', fontSize: '10px', fontWeight: 600, color: 'var(--apx-t-475569)', background: 'var(--apx-c-ffffff)', padding: '2px 6px', borderRadius: '6px', border: '1px solid var(--apx-c-e2e8f0)' }}>
+                {ts.room}
+              </span>
+            )}
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">{ts.classType}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Status and seats badges */}
+      <div className="flex items-center gap-2 flex-wrap mb-4 pb-4" style={{ borderBottom: '1px dashed var(--apx-c-e2e8f0)' }}>
+        <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide"
+          style={{ background: 'var(--apx-c-eff6ff)', color: 'var(--apx-t-1d4ed8)', border: '1px solid var(--apx-c-bfdbfe)' }}>{sec.status}</span>
+        <span className="text-[10px] font-bold px-3 py-1 rounded-full"
+          style={{ background: avail <= 0 ? 'var(--apx-c-fef2f2)' : 'var(--apx-c-f0fdf4)', color: avail <= 0 ? 'var(--apx-c-dc2626)' : 'var(--apx-c-16a34a)', border: `1px solid ${avail <= 0 ? 'var(--apx-c-fecdd3)' : 'var(--apx-c-bbf7d0)'}` }}>
+          {avail <= 0 ? 'FULL' : `${avail} seats`}
+        </span>
+      </div>
+
+      {/* Linked sections section */}
+      {_linked?.length > 0 && (
+        <div style={{ borderRadius: '12px', overflow: 'hidden', background: 'var(--apx-c-f8fafc)', border: `1px solid var(--apx-c-e2e8f0)` }}>
+          <div className="text-[10px] font-bold text-slate-600 uppercase tracking-wider px-3 py-2.5 flex items-center gap-1.5"
+            style={{ background: 'var(--apx-c-f1f5f9)', borderBottom: '1px solid var(--apx-c-e2e8f0)' }}>
+            <FiRepeat /> All {_linked.length + 1} sections
+          </div>
+          <div style={{ maxHeight: '180px', overflowY: 'auto' }}>
+            <div className="flex items-center gap-2 px-3 py-2.5 text-[11px] border-b border-slate-200"
+              style={{ background: 'var(--apx-c-ffffff)' }}>
+              <span className="font-bold text-emerald-600 w-10 flex-shrink-0 text-center">{sec.section || sec.classId}</span>
+              <span className="flex-1 text-slate-600 text-[10px] font-medium">{sec.timeSlots.map(ts => `${ts.day.slice(0, 3)} ${ts.startTime}–${ts.endTime}`).join(' · ')}</span>
+              <span className="font-bold text-emerald-600 text-[10px] flex-shrink-0 text-right" style={{ minWidth: '50px' }}>{avail} seats</span>
+            </div>
+            {_linked.map((ls, i) => {
+              const a = ls.capacity - ls.count;
+              return (
+                <div key={i} className="flex items-center gap-2 px-3 py-2.5 text-[11px] border-b border-slate-100 last:border-0"
+                  style={{ background: i % 2 === 0 ? 'var(--apx-c-ffffff)' : 'var(--apx-c-f8fafc)' }}>
+                  <span className="font-bold text-slate-700 w-10 flex-shrink-0 text-center text-[10px]">{ls.section || ls.classId}</span>
+                  <span className="flex-1 text-slate-600 text-[10px] font-medium">{ls.timeSlots.length ? ls.timeSlots.map(ts => `${ts.day.slice(0, 3)} ${ts.startTime}–${ts.endTime}`).join(' · ') : '—'}</span>
+                  <span className={`font-bold text-[10px] flex-shrink-0 text-right ${a <= 0 ? 'text-red-500' : 'text-emerald-600'}`} style={{ minWidth: '50px' }}>
+                    {a <= 0 ? 'FULL' : `${a} seats`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Remove button */}
+      <button onClick={() => onRemove(sec.classId)}
+        className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-150 hover:shadow-md"
+        style={{ background: 'var(--apx-c-fef2f2)', border: '1px solid var(--apx-c-fecdd3)', color: 'var(--apx-t-dc2626)' }}
+        onMouseEnter={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-ef4444)', color: 'var(--apx-t-ffffff)', borderColor: 'var(--apx-t-ef4444)' })}
+        onMouseLeave={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-fef2f2)', color: 'var(--apx-t-dc2626)', borderColor: 'var(--apx-t-fecdd3)' })}
+        title="Remove course"
+      ><FiX size={18} /></button>
+    </div>
+  );
+}
+
+function PanelHeader({ title, badge, action }) {
+  return (
+    <div className="flex items-center justify-between flex-wrap gap-3 px-5 py-3.5" style={{ background: GRAD.blue }}>
+      <div className="flex items-center gap-2">
+        <span className="text-[14px] font-bold text-white">{title}</span>
+        {badge && (
+          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full"
+            style={{ background: 'var(--apx-ov-15)', color: 'var(--apx-ov-90)', border: '1px solid var(--apx-ov-25)' }}>
+            {badge}
+          </span>
+        )}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+function GhostBtn({ onClick, children }) {
+  return (
+    <button onClick={onClick} className="text-[12px] font-bold px-3.5 py-1.5 rounded-lg transition-all"
+      style={{ background: 'var(--apx-ov-12)', color: 'var(--apx-t-ffffff)', border: '1.5px solid var(--apx-ov-30)' }}>
+      {children}
+    </button>
+  );
+}
+
+// Routine Modal 
+
+function RoutineModal({ selected, allCourses, onClose }) {
+  const DAY_ORDER = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const routineRef = useRef(null);
+
+  const downloadAsImage = async () => {
+    if (!routineRef.current) return;
+    try {
+      const node = routineRef.current;
+      const tableWrapper = node.querySelector('.routine-table-wrapper');
+      
+      // Save original styles
+      const origMaxH = node.style.maxHeight;
+      const origOvf = node.style.overflow;
+      const origTableOvfY = tableWrapper ? tableWrapper.style.overflowY : '';
+      const origTableOvfX = tableWrapper ? tableWrapper.style.overflowX : '';
+
+      // Expand for full capture
+      node.style.maxHeight = 'none';
+      node.style.overflow = 'visible';
+      if (tableWrapper) {
+        tableWrapper.style.overflowY = 'visible';
+        tableWrapper.style.overflowX = 'visible';
+      }
+
+      const canvas = await html2canvas(node, {
+        backgroundColor: 'var(--apx-t-ffffff)',
+        scale: 2,
+        logging: false,
+        windowHeight: node.scrollHeight
+      });
+
+      // Restore styles
+      node.style.maxHeight = origMaxH;
+      node.style.overflow = origOvf;
+      if (tableWrapper) {
+        tableWrapper.style.overflowY = origTableOvfY;
+        tableWrapper.style.overflowX = origTableOvfX;
+      }
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `routine-${new Date().toISOString().split('T')[0]}.png`;
+      link.click();
+    } catch (error) {
+      console.error('Error downloading routine:', error);
+    }
+  };
+
+  const activeDays = DAY_ORDER.filter(day =>
+    selected.some(c => c.timeSlots.some(ts => ts.day === day))
+  );
+
+  let minTime = Infinity, maxTime = -Infinity;
+  selected.forEach(c => {
+    c.timeSlots.forEach(ts => {
+      const s = timeToMinutes(ts.startTime);
+      const e = timeToMinutes(ts.endTime);
+      if (s !== null) minTime = Math.min(minTime, s);
+      if (e !== null) maxTime = Math.max(maxTime, e);
+    });
+  });
+  if (!isFinite(minTime)) minTime = 8 * 60;
+  if (!isFinite(maxTime)) maxTime = 18 * 60;
+  minTime = Math.floor(minTime / 20) * 20;
+  maxTime = Math.ceil(maxTime / 20) * 20;
+
+  const SLOT_INTERVAL = 20;
+  const timeSlots = [];
+  for (let t = minTime; t <= maxTime; t += SLOT_INTERVAL) timeSlots.push(t);
+
+  function fmtTime(mins) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    const ap = h >= 12 ? 'PM' : 'AM';
+    const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    return `${h12}:${String(m).padStart(2, '0')} ${ap}`;
+  }
+
+  // Build render plan
+  const plan = {};
+  activeDays.forEach(day => {
+    plan[day] = {};
+    const skipSet = new Set();
+    timeSlots.forEach(t => {
+      if (skipSet.has(t)) { plan[day][t] = 'skip'; return; }
+      let found = null;
+      for (const c of selected) {
+        for (const ts of c.timeSlots) {
+          if (ts.day !== day) continue;
+          const start = timeToMinutes(ts.startTime);
+          const end   = timeToMinutes(ts.endTime);
+          if (start === null || end === null) continue;
+          if (start >= t && start < t + SLOT_INTERVAL) { found = { course: c, slot: ts, start, end }; break; }
+        }
+        if (found) break;
+      }
+      if (found) {
+        const span = Math.ceil((found.end - t) / SLOT_INTERVAL);
+        plan[day][t] = { course: found.course, slot: found.slot, span };
+        for (let i = 1; i < span; i++) skipSet.add(t + i * SLOT_INTERVAL);
+      } else {
+        plan[day][t] = null;
+      }
+    });
+  });
+
+  const MIN_ROW_H = 28;
+
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <div style={{ background: 'var(--apx-c-ffffff)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', width: '100%', maxWidth: '1100px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,sans-serif", border: '1px solid var(--apx-c-e2e8f0)' }} ref={routineRef}>
+
+        {/* Header */}
+        <div data-html2canvas-ignore="true" style={{ background: 'var(--apx-c-ffffff)', padding: '20px 28px', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'space-between', flexShrink: 0, borderBottom: '1px solid var(--apx-c-f1f5f9)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ color: 'var(--apx-t-0f172a)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FiCalendar style={{ color: 'var(--apx-t-3b82f6)' }} /> Weekly Schedule
+            </span>
+            <span style={{ fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '999px', background: 'var(--apx-c-f1f5f9)', color: 'var(--apx-t-475569)' }}>
+              {selected.length} course{selected.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button onClick={() => downloadAsImage()}
+              className="hover:shadow-lg transition-all duration-200 flex items-center gap-1.5 hover:-translate-y-0.5"
+              style={{ background: 'var(--apx-c-2563eb)', border: 'none', color: 'var(--apx-t-ffffff)', borderRadius: '6px', padding: '8px 16px', fontSize: '13px', cursor: 'pointer', fontWeight: 700 }}>
+              <FiDownload /> Download Image
+            </button>
+            <button onClick={onClose}
+              className="hover:bg-slate-100 transition-all duration-200 flex items-center gap-1.5"
+              style={{ background: 'var(--apx-c-ffffff)', border: '1px solid var(--apx-c-e2e8f0)', color: 'var(--apx-t-475569)', borderRadius: '6px', padding: '8px 16px', fontSize: '13px', cursor: 'pointer', fontWeight: 700 }}>
+              <FiX /> Close
+            </button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <style>{`
+          .routine-table-wrapper::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+          }
+          .routine-table-wrapper::-webkit-scrollbar-track {
+            background: var(--apx-c-f8fafc);
+            border-radius: 4px;
+          }
+          .routine-table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--apx-c-bfdbfe);
+            border-radius: 4px;
+          }
+          .routine-table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--apx-c-93c5fd);
+          }
+        `}</style>
+        <div className="routine-table-wrapper" style={{ overflowY: 'auto', overflowX: 'auto', flex: 1, background: 'var(--apx-c-f8fafc)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed', minWidth: `${100 + activeDays.length * 150}px` }}>
+            <thead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
+              <tr style={{ background: 'var(--apx-c-ffffff)' }}>
+                <th style={{ width: '80px', padding: '16px 8px', fontSize: '11px', fontWeight: 800, color: 'var(--apx-t-94a3b8)', textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid var(--apx-c-e2e8f0)', textAlign: 'center' }}>
+                  Time
+                </th>
+                {activeDays.map(day => (
+                  <th key={day} style={{ padding: '16px 8px', fontSize: '12px', fontWeight: 800, color: 'var(--apx-t-334155)', textTransform: 'uppercase', letterSpacing: '0.1em', borderBottom: '1px solid var(--apx-c-e2e8f0)', textAlign: 'center' }}>
+                    {day}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {timeSlots.map((t, ti) => (
+                <tr key={t} style={{ borderBottom: '1px dashed var(--apx-c-e2e8f0)' }}>
+                  {/* Time label */}
+                  <td style={{ padding: '8px', background: 'var(--apx-c-ffffff)', borderRight: '1px solid var(--apx-c-f1f5f9)', whiteSpace: 'nowrap', verticalAlign: 'middle', textAlign: 'center', minHeight: `${MIN_ROW_H}px`, height: `${MIN_ROW_H}px` }}>
+                    <div style={{ fontWeight: 700, fontSize: '12px', color: 'var(--apx-t-64748b)' }}>{fmtTime(t)}</div>
+                  </td>
+
+                  {/* Day cells */}
+                  {activeDays.map(day => {
+                    const cell = plan[day][t];
+                    if (cell === 'skip') return null;
+                    if (!cell) return (
+                      <td key={day} style={{ minHeight: `${MIN_ROW_H}px`, height: `${MIN_ROW_H}px`, borderRight: '1px dashed var(--apx-c-f1f5f9)' }} />
+                    );
+                    const col = courseColor(cell.course.title);
+                    const linkedSecs = getLinkedSections(cell.course, allCourses);
+                    
+                    return (
+                      <td key={day} rowSpan={cell.span}
+                        style={{ padding: 0, borderRight: '1px dashed var(--apx-c-f1f5f9)', verticalAlign: 'top', position: 'relative' }}>
+                        <div style={{ 
+                          position: 'absolute',
+                          inset: '6px',
+                          background: col.bg, 
+                          border: '1px solid', 
+                          borderColor: hexToRgba(col.border, 0.15),
+                          borderTop: `4px solid ${col.border}`, 
+                          borderRadius: '8px', 
+                          padding: '10px 8px', 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          justifyContent: 'center',
+                          alignItems: 'center', 
+                          textAlign: 'center', 
+                          transition: 'all 0.2s', 
+                          overflow: 'hidden', 
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                          boxSizing: 'border-box'
+                        }}>
+                          <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--apx-t-1e293b)', lineHeight: 1.3, marginBottom: '4px' }}>
+                            {cell.course.title}
+                          </div>
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap', justifyItems: 'center', justifyContent: 'center', marginBottom: '4px' }}>
+                             <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--apx-t-ffffff)', background: col.border, borderRadius: '4px', padding: '2px 6px', letterSpacing: '0.02em', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                               {cell.course.section || cell.course.classId}
+                             </span>
+                             <span style={{ fontSize: '9px', fontWeight: 800, color: col.border, background: 'var(--apx-c-ffffff)', borderRadius: '4px', padding: '2px 6px', textTransform: 'uppercase', letterSpacing: '0.04em', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                               {cell.slot.classType}
+                             </span>
+                          </div>
+                          <div style={{ fontSize: '10px', color: 'var(--apx-t-475569)', fontWeight: 700, marginBottom: '4px' }}>
+                            {cell.slot.startTime}–{cell.slot.endTime}
+                          </div>
+                          {cell.slot.room && (
+                            <div style={{ fontSize: '10px', fontFamily: 'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace', fontWeight: 700, color: col.border, background: 'var(--apx-c-ffffff)', border: '1px solid', borderColor: hexToRgba(col.border, 0.2), borderRadius: '4px', padding: '2px 8px' }}>
+                              {cell.slot.room}
+                            </div>
+                          )}
+                          {linkedSecs.length > 0 && (
+                            <div style={{ width: '100%', marginTop: '6px', paddingTop: '6px', borderTop: '1px dashed', borderColor: hexToRgba(col.border, 0.3) }}>
+                              <div style={{ fontSize: '9px', fontWeight: 800, color: col.border, opacity: 0.8, marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Alt Sections</div>
+                              <div style={{ display: 'flex', gap: '3px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                {linkedSecs.slice(0, 3).map((ls, i) => (
+                                  <span key={i} style={{ fontSize: '9px', fontWeight: 700, color: 'var(--apx-t-ffffff)', background: col.border, borderRadius: '4px', padding: '1px 5px' }}>{ls.section || ls.classId}</span>
+                                ))}
+                                {linkedSecs.length > 3 && <span style={{ fontSize: '9px', fontWeight: 800, color: col.border, opacity: 0.8 }}>+{linkedSecs.length - 3}</span>}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Legend */}
+        <div style={{ padding: '16px 28px', background: 'var(--apx-c-ffffff)', borderTop: '1px solid var(--apx-c-f1f5f9)', display: 'flex', flexWrap: 'wrap', gap: '20px', flexShrink: 0, alignItems: 'center' }}>
+          <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--apx-t-94a3b8)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Legend</span>
+          {selected.map(sec => {
+            const col = courseColor(sec.title);
+            return (
+              <div key={sec.classId} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '12px', height: '12px', borderRadius: '4px', background: col.border, flexShrink: 0, boxShadow: `0 2px 4px ${hexToRgba(col.border, 0.3)}` }} />
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--apx-t-475569)' }}>{sec.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main component 
+
+export default function OfferedCoursesFilter({ allCourses = [], statuses = [], originalPanel, isLoading = false }) {
+  const [search,         setSearch]         = useState('');
+  const [activeStatuses, setActiveStatuses] = useState([]);
+  const [activeDays,     setActiveDays]     = useState([]);
+  const [fromH, setFromH] = useState('8');
+  const [fromM, setFromM] = useState('0');
+  const [toH,   setToH]   = useState('18');
+  const [toM,   setToM]   = useState('0');
+  const [page,    setPage]    = useState(1);
+  const [perPage, setPerPage] = useState(25);
+  const [selected, setSelected] = useState(() => loadSaved());
+  const [showRoutine, setShowRoutine] = useState(false);
+  const [isSelectedExpanded, setIsSelectedExpanded] = useState(false);
+  const [lastSavedStr, setLastSavedStr] = useState(() => JSON.stringify(loadSaved()));
+  const currentSelectedStr = JSON.stringify(selected);
+  const isSavedLocally = currentSelectedStr === lastSavedStr;
+
+  const handleManualSave = () => {
+    localStorage.setItem('aiub_selectedSections', currentSelectedStr);
+    setLastSavedStr(currentSelectedStr);
+  };
+
+  // Initialize statuses when data loads
+  useEffect(() => {
+    if (statuses.length > 0 && activeStatuses.length === 0) {
+      setActiveStatuses(statuses.filter(s => s.toLowerCase().includes('open')));
+    }
+  }, [statuses]);
+
+  // Clash map
+  const clashMap = useMemo(() => {
+    const map = {};
+    allCourses.forEach(c => {
+      if (selected.some(s => s.classId === c.classId)) return;
+      const r = checkClash(c, selected);
+      if (r.hasClash) map[c.classId] = r;
+    });
+    return map;
+  }, [allCourses, selected]);
+
+  // Filtered results
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const fh = parseFloat(fromH), fm = parseFloat(fromM) || 0;
+    const th = parseFloat(toH),   tm = parseFloat(toM)   || 0;
+    const tFrom = isNaN(fh) ? NaN : fh + fm / 60;
+    const tTo   = isNaN(th) ? NaN : th + tm / 60;
+    const hasFilter = q || activeStatuses.length || activeDays.length || !isNaN(tFrom) || !isNaN(tTo);
+    if (!hasFilter) return [];
+
+    return allCourses.filter(c => {
+      if (q && !c.title.toLowerCase().includes(q) && !c.fullTitle.toLowerCase().includes(q) && !c.classId.includes(q)) return false;
+      if (activeStatuses.length && !activeStatuses.includes(c.status)) return false;
+      if (activeDays.length && c.timeSlots.length && !activeDays.some(d => c.timeSlots.some(ts => ts.day === d))) return false;
+      if ((!isNaN(tFrom) || !isNaN(tTo)) && c.timeSlots.length) {
+        const ok = c.timeSlots.some(ts => {
+          const mins = timeToMinutes(ts.startTime);
+          if (mins === null) return true;
+          const h = mins / 60;
+          if (!isNaN(tFrom) && h < tFrom) return false;
+          if (!isNaN(tTo)   && h > tTo)   return false;
+          return true;
+        });
+        if (!ok) return false;
+      }
+      return true;
+    });
+  }, [allCourses, search, activeStatuses, activeDays, fromH, fromM, toH, toM]);
+
+  // Hide/show original portal table
+  useEffect(() => {
+    if (!originalPanel) return;
+    originalPanel.style.display = filtered.length ? 'none' : '';
+  }, [filtered.length, originalPanel]);
+
+  // Actions 
+
+  function toggleStatus(s) { setActiveStatuses(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]); setPage(1); }
+  function toggleDay(d)    { setActiveDays(p => p.includes(d) ? p.filter(x => x !== d) : [...p, d]); setPage(1); }
+
+  function handleSelect(classId) {
+    const c = allCourses.find(x => x.classId === classId);
+    if (!c || selected.some(s => s.classId === classId) || selected.some(s => s.title === c.title)) return;
+    if (checkClash(c, selected).hasClash) return;
+    setSelected(p => [...p, c]);
+  }
+
+  function handleRemove(classId) {
+    setSelected(p => {
+      const c = p.find(s => s.classId === classId);
+      return c ? p.filter(s => s.title !== c.title) : p;
+    });
+  }
+
+  function handleReset() {
+    setSearch(''); setActiveStatuses(statuses.filter(s => s.toLowerCase().includes('open')));
+    setActiveDays([]); setFromH('8'); setFromM('0'); setToH('18'); setToM('0'); setPage(1);
+  }
+
+  // Status button style 
+
+  function statusBtnStyle(s) {
+    const k = s.toLowerCase();
+    const [border, color, activeBg] =
+      k.includes('open')                          ? ['var(--apx-c-10b981)', 'var(--apx-c-059669)', 'linear-gradient(135deg,var(--apx-c-059669),var(--apx-c-10b981))'] :
+      k.includes('fresh')                         ? ['var(--apx-c-3b82f6)', 'var(--apx-c-2563eb)', GRAD.blue] :
+      k.includes('close') || k.includes('cancel') ? ['var(--apx-c-ef4444)', 'var(--apx-c-dc2626)', 'linear-gradient(135deg,var(--apx-c-dc2626),var(--apx-c-ef4444))'] :
+      k.includes('reserv')                        ? ['var(--apx-c-8b5cf6)', 'var(--apx-c-7c3aed)', 'linear-gradient(135deg,var(--apx-c-7c3aed),var(--apx-c-8b5cf6))'] :
+                                                    ['var(--apx-c-9ca3af)', 'var(--apx-c-6b7280)', 'linear-gradient(135deg,var(--apx-c-4b5563),var(--apx-c-6b7280))'];
+    return activeStatuses.includes(s)
+      ? { background: activeBg, color:'var(--apx-t-ffffff)', borderColor: 'transparent', boxShadow: `0 2px 8px ${border}55` }
+      : { background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-475569)', borderColor: 'var(--apx-t-e2e8f0)' };
+  }
+
+  // Pagination 
+
+  const totalPages = Math.ceil(filtered.length / perPage);
+  const pageData   = filtered.slice((page - 1) * perPage, page * perPage);
+
+  const pageBtn = (label, target, disabled) => (
+    <button key={label} onClick={() => !disabled && setPage(target)} disabled={disabled}
+      className="text-[12px] font-bold px-2.5 py-1 rounded-lg transition-all"
+      style={{ background: 'var(--apx-c-ffffff)', color: disabled ? 'var(--apx-c-94a3b8)' : 'var(--apx-c-2563eb)', border: `1.5px solid ${disabled ? 'var(--apx-c-e2e8f0)' : 'var(--apx-c-bfdbfe)'}`, cursor: disabled ? 'not-allowed' : 'pointer' }}>
+      {label}
+    </button>
+  );
+
+  const activePageBtn = (p) => (
+    <button key={p} onClick={() => setPage(p)}
+      className="text-[12px] font-bold px-2.5 py-1 rounded-lg"
+      style={p === page ? { background: GRAD.blue, color:'var(--apx-t-ffffff)', border: '1.5px solid transparent' } : { background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-2563eb)', border: '1.5px solid var(--apx-c-bfdbfe)' }}>
+      {p}
+    </button>
+  );
+
+  const pageNums = Array.from({ length: Math.min(5, totalPages) }, (_, i) => Math.max(1, Math.min(page - 2, totalPages - 4)) + i);
+
+  // Table header columns 
+  const TH_COLS = [
+    { label: 'Class ID',  w: '70px',  center: false },
+    { label: 'Title',     w: '100%',  center: false },
+    { label: 'Status',    w: '100px', center: false },
+    { label: 'Capacity',  w: '70px',  center: true  },
+    { label: 'Count',     w: '55px',  center: true  },
+    { label: 'Available', w: '85px',  center: true  },
+    { label: 'Schedule',  w: 'auto',  center: false },
+    { label: 'Action',    w: '95px',  center: true  },
+  ];
+
+  // Render 
+  return (
+    <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,sans-serif" }}>
+      {selected.length > 0 && (
+        <div className="mb-6 p-6 transition-all" style={{ background: 'var(--apx-c-eff6ff)', borderRadius: '16px', border: 'none' }}>
+          <div className="flex items-center justify-between transition-all duration-300" style={{ borderBottom: isSelectedExpanded ? '1px solid var(--apx-c-dbeafe)' : '1px solid transparent', paddingBottom: isSelectedExpanded ? '16px' : '0', marginBottom: isSelectedExpanded ? '20px' : '0' }}>
+             <div className="flex items-center gap-4">
+                 <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--apx-t-1e3a8a)', letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <FiList /> Selected Courses
+                 </span>
+                 <span style={{ background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-1e40af)', fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', border: '1px solid var(--apx-c-bfdbfe)' }}>
+                   {selected.length} course{selected.length !== 1 ? 's' : ''}
+                 </span>
+             </div>
+             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button title="will be save in your browser local storage" onClick={handleManualSave} className="hover:opacity-80 transition-all flex items-center gap-1.5" style={{ background: isSavedLocally ? 'var(--apx-c-16a34a)' : 'var(--apx-c-ffffff)', color: isSavedLocally ? 'var(--apx-c-ffffff)' : 'var(--apx-c-1e3a8a)', fontSize: '12px', fontWeight: 700, padding: '6px 14px', borderRadius: '8px', border: isSavedLocally ? '1px solid transparent' : '1px solid var(--apx-c-bfdbfe)' }}>
+                    {isSavedLocally ? <FiCheck /> : <FiSave />} {isSavedLocally ? 'Saved!' : 'Save'}
+                  </button>
+                  <button onClick={() => setShowRoutine(true)} className="hover:opacity-80 transition-opacity flex items-center gap-1.5" style={{ background: 'linear-gradient(135deg,var(--apx-c-1e3a8a),var(--apx-c-2563eb))', color: 'var(--apx-t-ffffff)', fontSize: '12px', fontWeight: 700, padding: '6px 14px', borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px rgba(37,99,235,0.3)' }}><FiCalendar /> Show Routine</button>
+                  <button onClick={() => { setSelected([]); localStorage.removeItem('aiub_selectedSections'); setLastSavedStr('[]'); }} className="hover:opacity-80 transition-opacity flex items-center gap-1.5" style={{ background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-dc2626)', fontSize: '12px', fontWeight: 700, padding: '6px 14px', borderRadius: '8px', border: '1px solid var(--apx-c-fecdd3)' }}><FiTrash2 /> Clear All</button>
+                </div>
+                
+                <button onClick={() => setIsSelectedExpanded(!isSelectedExpanded)} className="flex items-center justify-center gap-1.5 rounded-full hover:opacity-80 transition-all duration-200" style={{ padding: '6px 16px', color: 'var(--apx-t-1e40af)', background: 'var(--apx-c-dbeafe)', border: 'none', fontSize: '12px', fontWeight: 700 }}>
+                  {isSelectedExpanded ? 'Collapse' : 'Expand'}
+                  <FiChevronDown style={{ transform: isSelectedExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '16px' }} />
+                </button>
+             </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateRows: isSelectedExpanded ? '1fr' : '0fr', transition: 'grid-template-rows 0.3s ease-in-out' }}>
+            <div style={{ overflow: 'hidden' }}>
+              <div className="flex flex-wrap gap-4 pt-1 pb-1">
+                {selected.map(sec => <SelectedCard key={sec.classId} sec={sec} allCourses={allCourses} selected={selected} onRemove={handleRemove} />)}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRoutine && <RoutineModal selected={selected} allCourses={allCourses} onClose={() => setShowRoutine(false)} />}
+
+      <div className="mb-6 p-6 transition-all" style={{ background: 'var(--apx-c-eff6ff)', borderRadius: '16px', border: 'none' }}>
+        
+        {/* Top Header */}
+        <div className="flex items-center justify-between mb-6 pb-4" style={{ borderBottom: '1px solid var(--apx-c-dbeafe)' }}>
+           <div className="flex items-center gap-3">
+               <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--apx-t-1e3a8a)', letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}><FiZap /> Advanced Filters</span>
+               <span style={{ background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-1e40af)', fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', border: '1px solid var(--apx-c-bfdbfe)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                 {isLoading ? <><FiClock className="animate-spin" /> Loading courses...</> : `${allCourses.length} courses loaded`}
+               </span>
+           </div>
+           <button onClick={handleReset} className="hover:opacity-80 transition-opacity flex items-center gap-1.5" style={{ background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-2563eb)', fontSize: '12px', fontWeight: 700, padding: '6px 14px', borderRadius: '8px', border: '1px solid var(--apx-c-bfdbfe)' }}>
+             <FiRefreshCw /> Reset Filters
+           </button>
+        </div>
+
+        {/* Grid Layout for Filters */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+           
+           {/* 1. Search */}
+           <div className="flex flex-col gap-2.5">
+              <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--apx-t-64748b)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Search Course</label>
+              <input type="text" value={search} placeholder="Course name or Class ID…"
+                onChange={e => { setSearch(e.target.value); setPage(1); }}
+                className="w-full text-[13px] px-4 py-2.5 transition-all"
+                style={{ border: '1.5px solid var(--apx-c-bfdbfe)', borderRadius: '10px', background: 'var(--apx-c-ffffff)', outline: 'none', color: 'var(--apx-t-1e293b)', fontWeight: 500 }}
+                onFocus={e => Object.assign(e.target.style, { borderColor: 'var(--apx-t-2563eb)', boxShadow: '0 0 0 3px rgba(37,99,235,0.1)' })}
+                onBlur={e  => Object.assign(e.target.style, { borderColor: 'var(--apx-t-bfdbfe)', boxShadow: 'none' })}
+              />
+           </div>
+
+           {/* 2. Status */}
+           <div className="flex flex-col gap-2.5">
+              <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--apx-t-64748b)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Availability Status</label>
+              <div className="flex flex-wrap gap-2">
+                {statuses.map(s => (
+                  <button key={s} onClick={() => toggleStatus(s)}
+                    className="text-[11px] font-bold px-3.5 py-1.5 rounded-full transition-all hover:-translate-y-px"
+                    style={{ border: '1.5px solid', ...statusBtnStyle(s) }}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+           </div>
+
+           {/* 3. Days */}
+           <div className="flex flex-col gap-2.5">
+              <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--apx-t-64748b)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Class Days</label>
+              <div className="flex flex-wrap gap-2">
+                {ALL_DAYS.map(d => (
+                  <button key={d} onClick={() => toggleDay(d)}
+                    className="text-[11px] font-bold px-3.5 py-1.5 rounded-full transition-all hover:-translate-y-px"
+                    style={activeDays.includes(d)
+                      ? { background: GRAD.blue, color:'var(--apx-t-ffffff)', border: '1.5px solid transparent', boxShadow: '0 4px 10px rgba(37,99,235,0.25)' }
+                      : { background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-475569)', border: '1.5px solid var(--apx-c-bfdbfe)' }}>
+                    {d}
+                  </button>
+                ))}
+              </div>
+           </div>
+
+           {/* 4. Time Range */}
+           <div className="flex flex-col gap-2.5">
+              <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--apx-t-64748b)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time Range</label>
+              <div className="flex items-center gap-2 flex-wrap" style={{ background: 'var(--apx-c-ffffff)', padding: '4px', borderRadius: '12px', border: '1px solid var(--apx-c-bfdbfe)', width: 'fit-content' }}>
+                <div className="flex gap-1">
+                  <select value={fromH} onChange={e => { setFromH(e.target.value); setPage(1); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', border: '1px solid var(--apx-c-e2e8f0)', borderRadius: '8px', background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-1e293b)', fontWeight: 600, outline: 'none', cursor: 'pointer' }}>
+                    <option value="">Hr</option>
+                    {[8,9,10,11,12,13,14,15,16,17,18].map(v => <option key={v} value={v}>{v < 12 ? `${v} AM` : v === 12 ? '12 PM' : `${v-12} PM`}</option>)}
+                  </select>
+                  <select value={fromM} onChange={e => { setFromM(e.target.value); setPage(1); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', border: '1px solid var(--apx-c-e2e8f0)', borderRadius: '8px', background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-1e293b)', fontWeight: 600, outline: 'none', cursor: 'pointer' }}>
+                    {[0,10,20,30,40,50].map(v => <option key={v} value={v}>{`:${String(v).padStart(2,'0')}`}</option>)}
+                  </select>
+                </div>
+                <span style={{ fontSize: '14px', color: 'var(--apx-t-94a3b8)', fontWeight: 800, margin: '0 2px' }}>→</span>
+                <div className="flex gap-1">
+                  <select value={toH} onChange={e => { setToH(e.target.value); setPage(1); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', border: '1px solid var(--apx-c-e2e8f0)', borderRadius: '8px', background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-1e293b)', fontWeight: 600, outline: 'none', cursor: 'pointer' }}>
+                    <option value="">Hr</option>
+                    {[8,9,10,11,12,13,14,15,16,17,18].map(v => <option key={v} value={v}>{v < 12 ? `${v} AM` : v === 12 ? '12 PM' : `${v-12} PM`}</option>)}
+                  </select>
+                  <select value={toM} onChange={e => { setToM(e.target.value); setPage(1); }}
+                    style={{ padding: '6px 10px', fontSize: '12px', border: '1px solid var(--apx-c-e2e8f0)', borderRadius: '8px', background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-1e293b)', fontWeight: 600, outline: 'none', cursor: 'pointer' }}>
+                    {[0,10,20,30,40,50].map(v => <option key={v} value={v}>{`:${String(v).padStart(2,'0')}`}</option>)}
+                  </select>
+                </div>
+              </div>
+           </div>
+        </div>
+
+      </div>
+
+      {/*  Results Table / Empty State  */}
+      {filtered.length > 0 || isLoading ? (
+        <div className="rounded-2xl overflow-hidden shadow-lg mb-4" style={{ border: '1px solid var(--apx-c-e2e8f0)', background: 'var(--apx-c-ffffff)' }}>
+          {/* Results header */}
+          <div className="flex items-center justify-between flex-wrap gap-3 px-5 py-3.5"
+            style={{ background: 'var(--apx-c-f8fafc)', borderBottom: '1px solid var(--apx-c-e2e8f0)' }}>
+            <span className="text-[13px] font-bold text-slate-700 flex items-center gap-1.5"><FiFileText /> {filtered.length} course(s) found</span>
+            <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-600">
+              Show
+              <select value={perPage} onChange={e => { setPerPage(Number(e.target.value)); setPage(1); }}
+                style={{ padding: '4px 8px', fontSize: '12px', border: '1px solid var(--apx-c-cbd5e1)', borderRadius: '6px', background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-1e293b)', fontWeight: 600, outline: 'none', cursor: 'pointer' }}>
+                {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
+              per page
+            </div>
+          </div>
+
+          {/* Table */}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+              <thead>
+                <tr>
+                  {TH_COLS.map(({ label, w, center }) => (
+                    <th key={label} style={{ width: w, padding: '12px 14px', textAlign: center ? 'center' : 'left', fontSize: '11px', fontWeight: 700, color: 'var(--apx-t-334669)', background: 'var(--apx-c-eef2f9)', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', borderBottom: '1px solid var(--apx-c-e2e8f0)', borderRight: '1px solid var(--apx-c-e2e8f0)' }}>
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: 'var(--apx-t-64748b)', background: 'var(--apx-c-ffffff)' }}>
+                      <div className="flex flex-col items-center gap-2">
+                        <FiClock className="animate-spin text-[24px]" />
+                        <span className="font-bold">Fetching course data...</span>
+                        <span className="text-[11px] opacity-70">This may take a few seconds as we parse the schedule.</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : pageData.map((c, i) => {
+                  const rowBg = 'var(--apx-c-ffffff)';
+                  const hoverBg = 'var(--apx-c-f8fafc)';
+                  return (
+                    <tr key={c.classId} style={{ background: rowBg, borderBottom: '1px solid var(--apx-c-f1f5f9)', transition: 'background-color 0.2s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = hoverBg}
+                      onMouseLeave={e => e.currentTarget.style.background = rowBg}>
+                      <td style={{ padding: '12px 14px', fontFamily: 'ui-monospace,monospace', fontSize: '12px', fontWeight: 700, color: 'var(--apx-t-2563eb)', borderRight: '1px solid var(--apx-c-e2e8f0)' }}>{c.classId}</td>
+                      <td style={{ padding: '12px 14px', fontWeight: 600, color: 'var(--apx-t-1e293b)', borderRight: '1px solid var(--apx-c-e2e8f0)' }}>{c.fullTitle}</td>
+                      <td style={{ padding: '12px 14px', borderRight: '1px solid var(--apx-c-e2e8f0)' }}><StatusBadge status={c.status} /></td>
+                      <td style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--apx-t-475569)', fontWeight: 500, borderRight: '1px solid var(--apx-c-e2e8f0)' }}>{c.capacity}</td>
+                      <td style={{ padding: '12px 14px', textAlign: 'center', fontWeight: c.count >= 35 ? 700 : 500, color: c.count >= 35 ? 'var(--apx-c-b45309)' : 'var(--apx-c-475569)', background: c.count >= 35 ? 'linear-gradient(135deg,var(--apx-c-fffbeb),var(--apx-c-fef3c7))' : 'inherit', borderRight: '1px solid var(--apx-c-e2e8f0)' }}>{c.count}</td>
+                      <td style={{ padding: '12px 14px', textAlign: 'center', borderRight: '1px solid var(--apx-c-e2e8f0)' }}><SeatsBadge available={c.capacity - c.count} /></td>
+                      <td style={{ padding: '12px 14px', borderRight: '1px solid var(--apx-c-e2e8f0)' }}><SlotPills timeSlots={c.timeSlots} /></td>
+                      <td style={{ padding: '12px 14px', textAlign: 'center', borderRight: '1px solid var(--apx-c-e2e8f0)' }}>
+                        <ActionBtn course={c} selected={selected} clashMap={clashMap} onSelect={handleSelect} onRemove={handleRemove} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between flex-wrap gap-3 px-5 py-3.5"
+              style={{ background: 'var(--apx-c-f8fafc)', borderTop: '1px solid var(--apx-c-e2e8f0)' }}>
+              <div className="flex items-center gap-1.5">
+                {pageBtn('«', 1,           page === 1)}
+                {pageBtn('‹', page - 1,    page === 1)}
+                {pageNums.map(p => activePageBtn(p))}
+                {pageBtn('›', page + 1,    page === totalPages)}
+                {pageBtn('»', totalPages,  page === totalPages)}
+              </div>
+              <span className="text-[12px] font-bold" style={{ color: 'var(--apx-t-475569)' }}>
+                Page {page} of {totalPages}
+              </span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="rounded-2xl mb-4 flex flex-col items-center justify-center p-12 transition-all" style={{ border: '2px dashed var(--apx-c-bfdbfe)', background: 'linear-gradient(180deg, var(--apx-c-f8fafc) 0%, var(--apx-c-eff6ff) 100%)' }}>
+          <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--apx-t-1e3a8a)', marginBottom: '10px', letterSpacing: '-0.3px' }}>No courses found</span>
+          <span style={{ fontSize: '14px', color: 'var(--apx-t-64748b)', textAlign: 'center', maxWidth: '340px', fontWeight: 500, lineHeight: '1.5' }}>We couldn't find any courses matching your search or filter criteria. Try adjusting your filters.</span>
+          <button onClick={() => { setSearch(''); setPage(1); setActiveStatuses([]); setActiveDays([]); setFromH('8'); setFromM('0'); setToH('18'); setToM('0'); }} className="mt-8 hover:opacity-80 transition-opacity flex items-center gap-1.5" style={{ background: 'var(--apx-c-ffffff)', color: 'var(--apx-t-2563eb)', fontSize: '13px', fontWeight: 700, padding: '10px 20px', borderRadius: '10px', border: '1px solid var(--apx-c-bfdbfe)', boxShadow: '0 2px 6px rgba(37,99,235,0.08)' }}>
+             <FiRefreshCw /> Reset Filters
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

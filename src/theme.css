@@ -1,0 +1,995 @@
+/* ==== TOKENS:BEGIN (generated) ==== */
+:root {
+  --apx-c-0284c7: #0284c7;
+  --apx-c-0369a1: #0369a1;
+  --apx-c-059669: #059669;
+  --apx-c-065f46: #065f46;
+  --apx-c-06b6d4: #06b6d4;
+  --apx-c-0ea5e9: #0ea5e9;
+  --apx-c-0f172a: #0f172a;
+  --apx-c-0f766e: #0f766e;
+  --apx-c-10b981: #10b981;
+  --apx-c-111827: #111827;
+  --apx-c-15803d: #15803d;
+  --apx-c-166534: #166534;
+  --apx-c-16a34a: #16a34a;
+  --apx-c-1a73c8: #1a73c8;
+  --apx-c-1d4ed8: #1d4ed8;
+  --apx-c-1e293b: #1e293b;
+  --apx-c-1e3a5f: #1e3a5f;
+  --apx-c-1e3a8a: #1e3a8a;
+  --apx-c-1e40af: #1e40af;
+  --apx-c-22c55e: #22c55e;
+  --apx-c-2563eb: #2563eb;
+  --apx-c-2f7be7: #2f7be7;
+  --apx-c-34d399: #34d399;
+  --apx-c-3730a3: #3730a3;
+  --apx-c-374151: #374151;
+  --apx-c-3b0764: #3b0764;
+  --apx-c-3b82f6: #3b82f6;
+  --apx-c-4338ca: #4338ca;
+  --apx-c-475569: #475569;
+  --apx-c-4b5563: #4b5563;
+  --apx-c-4c1d95: #4c1d95;
+  --apx-c-4f46e5: #4f46e5;
+  --apx-c-5b21b6: #5b21b6;
+  --apx-c-60a5fa: #60a5fa;
+  --apx-c-6366f1: #6366f1;
+  --apx-c-64748b: #64748b;
+  --apx-c-6b7280: #6b7280;
+  --apx-c-6d28d9: #6d28d9;
+  --apx-c-6ee7b7: #6ee7b7;
+  --apx-c-7c3aed: #7c3aed;
+  --apx-c-7e22ce: #7e22ce;
+  --apx-c-7f1d1d: #7f1d1d;
+  --apx-c-8b5cf6: #8b5cf6;
+  --apx-c-90a4ae: #90a4ae;
+  --apx-c-92400e: #92400e;
+  --apx-c-93c5fd: #93c5fd;
+  --apx-c-94a3b8: #94a3b8;
+  --apx-c-991b1b: #991b1b;
+  --apx-c-9ca3af: #9ca3af;
+  --apx-c-a5d6fd: #a5d6fd;
+  --apx-c-a7f3d0: #a7f3d0;
+  --apx-c-b45309: #b45309;
+  --apx-c-b91c1c: #b91c1c;
+  --apx-c-bae6fd: #bae6fd;
+  --apx-c-bbf7d0: #bbf7d0;
+  --apx-c-be123c: #be123c;
+  --apx-c-be185d: #be185d;
+  --apx-c-bfdbfe: #bfdbfe;
+  --apx-c-c2410c: #c2410c;
+  --apx-c-c4b5fd: #c4b5fd;
+  --apx-c-c7d2fe: #c7d2fe;
+  --apx-c-cbd5e1: #cbd5e1;
+  --apx-c-cccccc: #cccccc;
+  --apx-c-ccfbf1: #ccfbf1;
+  --apx-c-d1d5db: #d1d5db;
+  --apx-c-d1fae5: #d1fae5;
+  --apx-c-d97706: #d97706;
+  --apx-c-dbeafe: #dbeafe;
+  --apx-c-dc2626: #dc2626;
+  --apx-c-dcfce7: #dcfce7;
+  --apx-c-ddd6fe: #ddd6fe;
+  --apx-c-e0e7ff: #e0e7ff;
+  --apx-c-e0f2fe: #e0f2fe;
+  --apx-c-e11d48: #e11d48;
+  --apx-c-e2e8f0: #e2e8f0;
+  --apx-c-e53e3e: #e53e3e;
+  --apx-c-e5e7eb: #e5e7eb;
+  --apx-c-e8e8e8: #e8e8e8;
+  --apx-c-e8edf3: #e8edf3;
+  --apx-c-e9d5ff: #e9d5ff;
+  --apx-c-ede9fe: #ede9fe;
+  --apx-c-eeeeee: #eeeeee;
+  --apx-c-eef2f9: #eef2f9;
+  --apx-c-eef2ff: #eef2ff;
+  --apx-c-ef4444: #ef4444;
+  --apx-c-eff6ff: #eff6ff;
+  --apx-c-f0f4ff: #f0f4ff;
+  --apx-c-f0f7ff: #f0f7ff;
+  --apx-c-f0f9ff: #f0f9ff;
+  --apx-c-f0fdf4: #f0fdf4;
+  --apx-c-f0fdfa: #f0fdfa;
+  --apx-c-f1f5f9: #f1f5f9;
+  --apx-c-f3e8ff: #f3e8ff;
+  --apx-c-f3f4f6: #f3f4f6;
+  --apx-c-f43f5e: #f43f5e;
+  --apx-c-f59e0b: #f59e0b;
+  --apx-c-f5f3ff: #f5f3ff;
+  --apx-c-f5f5f5: #f5f5f5;
+  --apx-c-f7fee7: #f7fee7;
+  --apx-c-f8fafc: #f8fafc;
+  --apx-c-f8faff: #f8faff;
+  --apx-c-f8fbff: #f8fbff;
+  --apx-c-faf5ff: #faf5ff;
+  --apx-c-fafafa: #fafafa;
+  --apx-c-fbbf24: #fbbf24;
+  --apx-c-fca5a5: #fca5a5;
+  --apx-c-fcd34d: #fcd34d;
+  --apx-c-fce7f3: #fce7f3;
+  --apx-c-fde68a: #fde68a;
+  --apx-c-fdf2f8: #fdf2f8;
+  --apx-c-fdf4ff: #fdf4ff;
+  --apx-c-fecaca: #fecaca;
+  --apx-c-fecdd3: #fecdd3;
+  --apx-c-fee2e2: #fee2e2;
+  --apx-c-fef08a: #fef08a;
+  --apx-c-fef2f2: #fef2f2;
+  --apx-c-fef3c7: #fef3c7;
+  --apx-c-fef9c3: #fef9c3;
+  --apx-c-fefce8: #fefce8;
+  --apx-c-ffe4e6: #ffe4e6;
+  --apx-c-ffedd5: #ffedd5;
+  --apx-c-fff1f2: #fff1f2;
+  --apx-c-fff7ed: #fff7ed;
+  --apx-c-fff8f8: #fff8f8;
+  --apx-c-fffbeb: #fffbeb;
+  --apx-c-fffdf7: #fffdf7;
+  --apx-c-ffffff: #ffffff;
+  --apx-t-0284c7: #0284c7;
+  --apx-t-0369a1: #0369a1;
+  --apx-t-059669: #059669;
+  --apx-t-0d47a1: #0d47a1;
+  --apx-t-0f172a: #0f172a;
+  --apx-t-10b981: #10b981;
+  --apx-t-111827: #111827;
+  --apx-t-15803d: #15803d;
+  --apx-t-166534: #166534;
+  --apx-t-16a34a: #16a34a;
+  --apx-t-1a73c8: #1a73c8;
+  --apx-t-1d4ed8: #1d4ed8;
+  --apx-t-1e293b: #1e293b;
+  --apx-t-1e3a5f: #1e3a5f;
+  --apx-t-1e3a8a: #1e3a8a;
+  --apx-t-1e40af: #1e40af;
+  --apx-t-1f2937: #1f2937;
+  --apx-t-2563eb: #2563eb;
+  --apx-t-334155: #334155;
+  --apx-t-334669: #334669;
+  --apx-t-374151: #374151;
+  --apx-t-3b82f6: #3b82f6;
+  --apx-t-475569: #475569;
+  --apx-t-4b5563: #4b5563;
+  --apx-t-4f46e5: #4f46e5;
+  --apx-t-6366f1: #6366f1;
+  --apx-t-64748b: #64748b;
+  --apx-t-6b7280: #6b7280;
+  --apx-t-78350f: #78350f;
+  --apx-t-7c3aed: #7c3aed;
+  --apx-t-7e22ce: #7e22ce;
+  --apx-t-92400e: #92400e;
+  --apx-t-93c5fd: #93c5fd;
+  --apx-t-94a3b8: #94a3b8;
+  --apx-t-991b1b: #991b1b;
+  --apx-t-9ca3af: #9ca3af;
+  --apx-t-a16207: #a16207;
+  --apx-t-a855f7: #a855f7;
+  --apx-t-b91c1c: #b91c1c;
+  --apx-t-be123c: #be123c;
+  --apx-t-bfdbfe: #bfdbfe;
+  --apx-t-cbd5e1: #cbd5e1;
+  --apx-t-d1d5db: #d1d5db;
+  --apx-t-d97706: #d97706;
+  --apx-t-dc2626: #dc2626;
+  --apx-t-e11d48: #e11d48;
+  --apx-t-e2e8f0: #e2e8f0;
+  --apx-t-e53e3e: #e53e3e;
+  --apx-t-ef4444: #ef4444;
+  --apx-t-eff6ff: #eff6ff;
+  --apx-t-f0fdf4: #f0fdf4;
+  --apx-t-f59e0b: #f59e0b;
+  --apx-t-f8fafc: #f8fafc;
+  --apx-t-fca5a5: #fca5a5;
+  --apx-t-fcd34d: #fcd34d;
+  --apx-t-fecdd3: #fecdd3;
+  --apx-t-fef2f2: #fef2f2;
+  --apx-t-ffffff: #ffffff;
+  --apx-ov-10: rgba(255, 255, 255, 0.1);
+  --apx-ov-12: rgba(255, 255, 255, 0.12);
+  --apx-ov-15: rgba(255, 255, 255, 0.15);
+  --apx-ov-25: rgba(255, 255, 255, 0.25);
+  --apx-ov-30: rgba(255, 255, 255, 0.3);
+  --apx-ov-35: rgba(255, 255, 255, 0.35);
+  --apx-ov-40: rgba(255, 255, 255, 0.4);
+  --apx-ov-50: rgba(255, 255, 255, 0.5);
+  --apx-ov-55: rgba(255, 255, 255, 0.55);
+  --apx-ov-60: rgba(255, 255, 255, 0.6);
+  --apx-ov-70: rgba(255, 255, 255, 0.7);
+  --apx-ov-75: rgba(255, 255, 255, 0.75);
+  --apx-ov-85: rgba(255, 255, 255, 0.85);
+  --apx-ov-88: rgba(255, 255, 255, 0.88);
+  --apx-ov-90: rgba(255, 255, 255, 0.9);
+}
+
+html.apx-dark {
+  --apx-c-0284c7: #0284c7;
+  --apx-c-0369a1: #0a5c94;
+  --apx-c-059669: #0e7a52;
+  --apx-c-065f46: #1c2534;
+  --apx-c-06b6d4: #06b6d4;
+  --apx-c-0ea5e9: #0ea5e9;
+  --apx-c-0f172a: #1c2534;
+  --apx-c-0f766e: #0f766e;
+  --apx-c-10b981: #0f8f63;
+  --apx-c-111827: #1c2534;
+  --apx-c-15803d: #15803d;
+  --apx-c-166534: #166534;
+  --apx-c-16a34a: #15803d;
+  --apx-c-1a73c8: #1a73c8;
+  --apx-c-1d4ed8: #1d4ed8;
+  --apx-c-1e293b: #1c2534;
+  --apx-c-1e3a5f: #1c2534;
+  --apx-c-1e3a8a: #1e3a8a;
+  --apx-c-1e40af: #1e40af;
+  --apx-c-22c55e: #16a34a;
+  --apx-c-2563eb: #2563eb;
+  --apx-c-2f7be7: #2f7be7;
+  --apx-c-34d399: #0f8f63;
+  --apx-c-3730a3: #1c2534;
+  --apx-c-374151: #1c2534;
+  --apx-c-3b0764: #1c2534;
+  --apx-c-3b82f6: #1c2534;
+  --apx-c-4338ca: #4338ca;
+  --apx-c-475569: #1c2534;
+  --apx-c-4b5563: #1c2534;
+  --apx-c-4c1d95: #1c2534;
+  --apx-c-4f46e5: #4f46e5;
+  --apx-c-5b21b6: #1c2534;
+  --apx-c-60a5fa: #2e4058;
+  --apx-c-6366f1: #1c2534;
+  --apx-c-64748b: #1c2534;
+  --apx-c-6b7280: #1c2534;
+  --apx-c-6d28d9: #1c2534;
+  --apx-c-6ee7b7: #1e4a2b;
+  --apx-c-7c3aed: #6d31d0;
+  --apx-c-7e22ce: #1c2534;
+  --apx-c-7f1d1d: #1c2534;
+  --apx-c-8b5cf6: #7440d0;
+  --apx-c-90a4ae: #38455c;
+  --apx-c-92400e: #1c2534;
+  --apx-c-93c5fd: #2e4058;
+  --apx-c-94a3b8: #1c2534;
+  --apx-c-991b1b: #1c2534;
+  --apx-c-9ca3af: #1c2534;
+  --apx-c-a5d6fd: #2e4058;
+  --apx-c-a7f3d0: #21402c;
+  --apx-c-b45309: #9c5215;
+  --apx-c-b91c1c: #9c3028;
+  --apx-c-bae6fd: #25405e;
+  --apx-c-bbf7d0: #21402c;
+  --apx-c-be123c: #1c2534;
+  --apx-c-be185d: #1c2534;
+  --apx-c-bfdbfe: #2a3d5c;
+  --apx-c-c2410c: #1c2534;
+  --apx-c-c4b5fd: #3c3158;
+  --apx-c-c7d2fe: #2e3c66;
+  --apx-c-cbd5e1: #38455c;
+  --apx-c-cccccc: #38455c;
+  --apx-c-ccfbf1: #183430;
+  --apx-c-d1d5db: #38455c;
+  --apx-c-d1fae5: #1a2f22;
+  --apx-c-d97706: #b3651c;
+  --apx-c-dbeafe: #22334a;
+  --apx-c-dc2626: #c0392f;
+  --apx-c-dcfce7: #1a2f22;
+  --apx-c-ddd6fe: #342a4e;
+  --apx-c-e0e7ff: #232e4a;
+  --apx-c-e0f2fe: #1c2e46;
+  --apx-c-e11d48: #1c2534;
+  --apx-c-e2e8f0: #2a3547;
+  --apx-c-e53e3e: #c0392f;
+  --apx-c-e5e7eb: #2a3547;
+  --apx-c-e8e8e8: #2a3547;
+  --apx-c-e8edf3: #2a3547;
+  --apx-c-e9d5ff: #342a4e;
+  --apx-c-ede9fe: #2b2140;
+  --apx-c-eeeeee: #2a3547;
+  --apx-c-eef2f9: #1c2534;
+  --apx-c-eef2ff: #1d2440;
+  --apx-c-ef4444: #d0524e;
+  --apx-c-eff6ff: #1b2434;
+  --apx-c-f0f4ff: #1c2534;
+  --apx-c-f0f7ff: #1b2434;
+  --apx-c-f0f9ff: #17202e;
+  --apx-c-f0fdf4: #14251b;
+  --apx-c-f0fdfa: #122724;
+  --apx-c-f1f5f9: #1a2231;
+  --apx-c-f3e8ff: #2b2140;
+  --apx-c-f3f4f6: #1a2231;
+  --apx-c-f43f5e: #1c2534;
+  --apx-c-f59e0b: #c88a1f;
+  --apx-c-f5f3ff: #231a33;
+  --apx-c-f5f5f5: #1a2231;
+  --apx-c-f7fee7: #1a2a16;
+  --apx-c-f8fafc: #151c28;
+  --apx-c-f8faff: #1b2434;
+  --apx-c-f8fbff: #1b2434;
+  --apx-c-faf5ff: #231a33;
+  --apx-c-fafafa: #151c28;
+  --apx-c-fbbf24: #c8a21f;
+  --apx-c-fca5a5: #54262a;
+  --apx-c-fcd34d: #c8a21f;
+  --apx-c-fce7f3: #3a2130;
+  --apx-c-fde68a: #453b1e;
+  --apx-c-fdf2f8: #2e1a28;
+  --apx-c-fdf4ff: #2e1a28;
+  --apx-c-fecaca: #3a2226;
+  --apx-c-fecdd3: #3a2228;
+  --apx-c-fee2e2: #3a2226;
+  --apx-c-fef08a: #453b1e;
+  --apx-c-fef2f2: #2e1a1c;
+  --apx-c-fef3c7: #383018;
+  --apx-c-fef9c3: #383018;
+  --apx-c-fefce8: #2e2712;
+  --apx-c-ffe4e6: #3a2228;
+  --apx-c-ffedd5: #382a19;
+  --apx-c-fff1f2: #2e1a20;
+  --apx-c-fff7ed: #2e2214;
+  --apx-c-fff8f8: #2e1a20;
+  --apx-c-fffbeb: #2e2712;
+  --apx-c-fffdf7: #1c2534;
+  --apx-c-ffffff: #1c2534;
+  --apx-t-0284c7: #7cb8e8;
+  --apx-t-0369a1: #7cb8e8;
+  --apx-t-059669: #4cd49a;
+  --apx-t-0d47a1: #8cc7ff;
+  --apx-t-0f172a: #e8edf4;
+  --apx-t-10b981: #4cd49a;
+  --apx-t-111827: #e8edf4;
+  --apx-t-15803d: #63d68f;
+  --apx-t-166534: #63d68f;
+  --apx-t-16a34a: #c3cfdf;
+  --apx-t-1a73c8: #5fb2ff;
+  --apx-t-1d4ed8: #6ea8ff;
+  --apx-t-1e293b: #dde5f0;
+  --apx-t-1e3a5f: #cfe0f5;
+  --apx-t-1e3a8a: #9db8e8;
+  --apx-t-1e40af: #9db8e8;
+  --apx-t-1f2937: #dde5f0;
+  --apx-t-2563eb: #c3cfdf;
+  --apx-t-334155: #c3cfdf;
+  --apx-t-334669: #c3cfdf;
+  --apx-t-374151: #c3cfdf;
+  --apx-t-3b82f6: #60a5fa;
+  --apx-t-475569: #a9b6c8;
+  --apx-t-4b5563: #a9b6c8;
+  --apx-t-4f46e5: #c3cfdf;
+  --apx-t-6366f1: #818cf8;
+  --apx-t-64748b: #8b9aad;
+  --apx-t-6b7280: #8b9aad;
+  --apx-t-78350f: #e5c558;
+  --apx-t-7c3aed: #c3a6f5;
+  --apx-t-7e22ce: #c3a6f5;
+  --apx-t-92400e: #e5c558;
+  --apx-t-93c5fd: #c3cfdf;
+  --apx-t-94a3b8: #6d7d94;
+  --apx-t-991b1b: #ef8a8a;
+  --apx-t-9ca3af: #6d7d94;
+  --apx-t-a16207: #e5c558;
+  --apx-t-a855f7: #c3cfdf;
+  --apx-t-b91c1c: #f28b8b;
+  --apx-t-be123c: #f8a0a8;
+  --apx-t-bfdbfe: #c3cfdf;
+  --apx-t-cbd5e1: #55637a;
+  --apx-t-d1d5db: #55637a;
+  --apx-t-d97706: #edc258;
+  --apx-t-dc2626: #f28b8b;
+  --apx-t-e11d48: #f8a0b0;
+  --apx-t-e2e8f0: #c3cfdf;
+  --apx-t-e53e3e: #c3cfdf;
+  --apx-t-ef4444: #c3cfdf;
+  --apx-t-eff6ff: #c3cfdf;
+  --apx-t-f0fdf4: #c3cfdf;
+  --apx-t-f59e0b: #c3cfdf;
+  --apx-t-f8fafc: #c3cfdf;
+  --apx-t-fca5a5: #c3cfdf;
+  --apx-t-fcd34d: #c3cfdf;
+  --apx-t-fecdd3: #c3cfdf;
+  --apx-t-fef2f2: #c3cfdf;
+  --apx-t-ffffff: #ffffff;
+  --apx-ov-10: rgba(13, 20, 33, 0.1);
+  --apx-ov-12: rgba(13, 20, 33, 0.12);
+  --apx-ov-15: rgba(13, 20, 33, 0.15);
+  --apx-ov-25: rgba(13, 20, 33, 0.25);
+  --apx-ov-30: rgba(13, 20, 33, 0.3);
+  --apx-ov-35: rgba(13, 20, 33, 0.35);
+  --apx-ov-40: rgba(13, 20, 33, 0.4);
+  --apx-ov-50: rgba(13, 20, 33, 0.5);
+  --apx-ov-55: rgba(13, 20, 33, 0.55);
+  --apx-ov-60: rgba(13, 20, 33, 0.6);
+  --apx-ov-70: rgba(13, 20, 33, 0.7);
+  --apx-ov-75: rgba(13, 20, 33, 0.75);
+  --apx-ov-85: rgba(13, 20, 33, 0.85);
+  --apx-ov-88: rgba(13, 20, 33, 0.88);
+  --apx-ov-90: rgba(13, 20, 33, 0.9);
+}
+/* ==== TOKENS:END ==== */
+
+/* ============================================================================
+   AIUB Portal+ Enhanced — manual dark theme layers
+   Everything below applies ONLY under `html.apx-dark` (Dark theme).
+   Appended after the generated token block by the build maintainer.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. Base portal darkening (original portal UI: panels, tables, forms…)
+   ------------------------------------------------------------------------- */
+html.apx-dark {
+  color-scheme: dark;
+}
+
+html.apx-dark,
+html.apx-dark body {
+  background-color: #0e131b !important;
+}
+
+html.apx-dark body {
+  color: #e7ecf3;
+}
+
+html.apx-dark h1, html.apx-dark h2, html.apx-dark h3,
+html.apx-dark h4, html.apx-dark h5, html.apx-dark h6 {
+  color: #e7ecf3;
+}
+
+html.apx-dark p {
+  color: #b7c2d2;
+}
+
+html.apx-dark a { color: #64b5f6; }
+html.apx-dark a:hover, html.apx-dark a:focus { color: #9cccff; }
+
+html.apx-dark ::selection {
+  background: #1e6bb8;
+  color: #fff;
+}
+
+html.apx-dark ::-webkit-scrollbar { width: 12px; height: 12px; }
+html.apx-dark ::-webkit-scrollbar-track { background: #10161f; }
+html.apx-dark ::-webkit-scrollbar-thumb {
+  background: #33415c;
+  border: 3px solid #10161f;
+  border-radius: 7px;
+}
+html.apx-dark ::-webkit-scrollbar-thumb:hover { background: #485979; }
+html.apx-dark ::-webkit-scrollbar-corner { background: #10161f; }
+
+/* Panels */
+html.apx-dark .panel {
+  background-color: #151c28;
+  border-color: #2a3547;
+}
+html.apx-dark .panel-default > .panel-heading,
+html.apx-dark .panel-group .panel-heading {
+  color: #fff;
+  background-color: #0b4a9e;
+  border-color: #2a3547;
+}
+html.apx-dark .panel-default > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #2a3547;
+}
+html.apx-dark .panel-footer,
+html.apx-dark tfoot.table-footer {
+  background-color: #1e6fbb;
+  border-top-color: #2a3547;
+  color: #fff;
+}
+html.apx-dark .panel-primary > .panel-heading {
+  color: #38c1f2;
+  background-color: rgba(56, 193, 242, 0.15);
+  border-color: rgba(56, 193, 242, 0.35);
+}
+html.apx-dark .panel-body { color: #b7c2d2; }
+
+/* Navbar fallback (used when the Enhanced UI feature is off) */
+html.apx-dark .navbar-default {
+  background-color: #101724;
+  border-color: #1e88e5;
+}
+html.apx-dark .navbar-default .navbar-nav > li > a,
+html.apx-dark .navbar-default .navbar-link,
+html.apx-dark .navbar-default .navbar-text {
+  color: #64b5f6;
+}
+html.apx-dark .navbar-default .navbar-nav > li > a:hover {
+  color: #9cccff;
+  background-color: rgba(100, 181, 246, 0.08);
+}
+html.apx-dark .navbar-brand.logo {
+  background-color: #e9eef5;
+  border-radius: 10px;
+  margin-left: 8px;
+  margin-top: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* Tables */
+html.apx-dark .table > thead > tr > th,
+html.apx-dark .table > tbody > tr > th,
+html.apx-dark .table > tfoot > tr > th,
+html.apx-dark .table > thead > tr > td,
+html.apx-dark .table > tbody > tr > td,
+html.apx-dark .table > tfoot > tr > td {
+  border-top-color: #2a3547;
+  color: #b7c2d2;
+}
+html.apx-dark .table > thead > tr > th {
+  color: #e7ecf3;
+  background-color: #1a2231;
+  border-bottom: 2px solid #38455c;
+}
+html.apx-dark .table-bordered,
+html.apx-dark .table-bordered td,
+html.apx-dark .table-bordered th { border-color: #2a3547; }
+html.apx-dark .table-striped > tbody > tr:nth-of-type(odd) { background-color: #171f2d; }
+html.apx-dark .table-hover > tbody > tr:hover,
+html.apx-dark .table-hover > tbody > tr:hover > td { background-color: #1e2839; }
+html.apx-dark table caption {
+  color: #e7ecf3;
+  background: #1a2231;
+  border-top: 1px solid #2a3547;
+  border-bottom: 1px solid #2a3547;
+}
+
+/* Forms */
+html.apx-dark .form-control,
+html.apx-dark input[type="text"],
+html.apx-dark input[type="password"],
+html.apx-dark input[type="email"],
+html.apx-dark input[type="number"],
+html.apx-dark input[type="search"],
+html.apx-dark input[type="tel"],
+html.apx-dark input[type="url"],
+html.apx-dark input[type="date"],
+html.apx-dark textarea,
+html.apx-dark select {
+  color: #e7ecf3;
+  background-color: #1a2231;
+  border-color: #38455c;
+  caret-color: #e7ecf3;
+}
+html.apx-dark .form-control::placeholder { color: #6d7d94; opacity: 1; }
+html.apx-dark .form-control:focus {
+  border-color: #64b5f6;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3), 0 0 6px rgba(100, 181, 246, 0.35);
+}
+html.apx-dark .form-control[disabled] {
+  background-color: #1c2434;
+  color: #8b9aad;
+}
+html.apx-dark input:-webkit-autofill,
+html.apx-dark input:-webkit-autofill:hover,
+html.apx-dark input:-webkit-autofill:focus,
+html.apx-dark textarea:-webkit-autofill,
+html.apx-dark select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #1a2231 inset !important;
+  -webkit-text-fill-color: #e7ecf3 !important;
+  caret-color: #e7ecf3;
+  transition: background-color 9999s ease-in-out 0s;
+}
+html.apx-dark .input-group-addon {
+  color: #b7c2d2;
+  background-color: #1e2839;
+  border-color: #38455c;
+}
+html.apx-dark input[type="checkbox"],
+html.apx-dark input[type="radio"] { accent-color: #1e6bb8; }
+html.apx-dark label { color: #b7c2d2; }
+html.apx-dark .field-validation-error { color: #ff8a80 !important; }
+
+/* Buttons */
+html.apx-dark .btn { color: #e7ecf3; }
+html.apx-dark .btn-default {
+  color: #b7c2d2;
+  background-color: #1a2231;
+  border-color: #38455c;
+}
+html.apx-dark .btn-default:hover {
+  color: #e7ecf3;
+  background-color: #1e2839;
+  border-color: #64b5f6;
+}
+html.apx-dark .btn-primary {
+  color: #fff;
+  background-color: #1e6bb8;
+  border-color: #175591;
+}
+html.apx-dark .btn-primary:hover { background-color: #2480cf; border-color: #2f93e0; }
+html.apx-dark .btn-success { color: #fff; background-color: #35794a; border-color: #2c643d; }
+html.apx-dark .btn-info    { color: #fff; background-color: #2391b8; border-color: #1d7d9f; }
+html.apx-dark .btn-warning { color: #1d1608; background-color: #d69a35; border-color: #c28a2c; }
+html.apx-dark .btn-danger  { color: #fff; background-color: #b94340; border-color: #a03a37; }
+html.apx-dark .btn-link { color: #64b5f6; }
+html.apx-dark .btn.disabled,
+html.apx-dark .btn[disabled] {
+  color: #8b9aad;
+  background-color: #1c2434;
+  border-color: #2a3547;
+  opacity: 0.65;
+}
+html.apx-dark .panel-heading .btn-primary {
+  color: #eaf3ff;
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* Alerts */
+html.apx-dark .alert-success { color: #8fd694; background-color: #14301c; border-color: #1e4a2b; }
+html.apx-dark .alert-info    { color: #7fc8e8; background-color: #0f2a38; border-color: #1c4557; }
+html.apx-dark .alert-warning { color: #e5c558; background-color: #332a12; border-color: #4d3f1a; }
+html.apx-dark .alert-danger  { color: #f08a8a; background-color: #3a1a1a; border-color: #54262a; }
+html.apx-dark .alert[style*="black"],
+html.apx-dark .alert-warning[style*="color"] { color: #e5c558 !important; }
+
+/* Labels, badges */
+html.apx-dark .label { color: #fff; }
+html.apx-dark .label-default { background-color: #55637a; }
+html.apx-dark .label-primary { background-color: #2e78b8; }
+html.apx-dark .label-success { background-color: #3f8f52; }
+html.apx-dark .label-info    { background-color: #2a8fb5; }
+html.apx-dark .label-warning { background-color: #b98a2f; }
+html.apx-dark .label-danger  { background-color: #c05252; }
+html.apx-dark .badge { color: #e7ecf3; background-color: #55637a; }
+
+/* Dropdowns, modals */
+html.apx-dark .dropdown-menu {
+  color: #e7ecf3;
+  background-color: #1e2839;
+  border-color: #38455c;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+html.apx-dark .dropdown-menu > li > a { color: #b7c2d2; }
+html.apx-dark .dropdown-menu > li > a:hover,
+html.apx-dark .dropdown-menu > li > a:focus {
+  color: #e7ecf3;
+  background-color: #26334a;
+}
+html.apx-dark .modal-content {
+  color: #e7ecf3;
+  background-color: #1e2839;
+  border: 1px solid #38455c;
+}
+html.apx-dark .modal-header,
+html.apx-dark .modal-footer { border-color: #2a3547; }
+html.apx-dark .modal-backdrop.in { opacity: 0.65; }
+
+/* List groups, pagination, wells, navs */
+html.apx-dark .list-group-item {
+  color: #b7c2d2;
+  background-color: #151c28;
+  border-color: #2a3547;
+}
+html.apx-dark a.list-group-item:hover {
+  color: #e7ecf3;
+  background-color: #1e2839;
+}
+html.apx-dark .pagination > li > a,
+html.apx-dark .pagination > li > span {
+  color: #64b5f6;
+  background-color: #1a2231;
+  border-color: #38455c;
+}
+html.apx-dark .pagination > .active > a {
+  color: #fff;
+  background-color: #1e6bb8;
+  border-color: #1e6bb8;
+}
+html.apx-dark .nav-tabs { border-bottom-color: #2a3547; }
+html.apx-dark .nav-tabs > li.active > a {
+  color: #e7ecf3;
+  background-color: #151c28;
+  border-color: #38455c #38455c transparent;
+}
+html.apx-dark .well { color: #b7c2d2; background-color: #1a2231; border-color: #2a3547; }
+html.apx-dark .thumbnail { background-color: #151c28; border-color: #2a3547; }
+
+/* Datepicker */
+html.apx-dark .datepicker { color: #e7ecf3; background-color: #1e2839; border: 1px solid #38455c; }
+html.apx-dark .datepicker table tr td.day:hover { background: #26334a; }
+html.apx-dark .datepicker table tr td.old,
+html.apx-dark .datepicker table tr td.new { color: #8b9aad; }
+html.apx-dark .datepicker table tr td.today { background-color: #4d3f1a; border-color: #e5c558; }
+html.apx-dark .datepicker table tr td.active { color: #fff; background-color: #1e6bb8; }
+html.apx-dark .datepicker-dropdown:after { border-bottom-color: #1e2839; }
+
+/* Loader & overlay */
+html.apx-dark #dvLoading {
+  background-color: #151c28;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+html.apx-dark #backOpacity { opacity: 0.65; }
+
+/* Login page */
+html.apx-dark .login-form {
+  background-color: #151c28;
+  border: 1px solid #2a3547;
+  border-radius: 10px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+}
+html.apx-dark .login_header { color: #b7c2d2; }
+html.apx-dark .aiub_title { color: #e7ecf3; }
+html.apx-dark .aiub_slogan { color: #8b9aad; }
+html.apx-dark .login-form blockquote { border-left-color: #38455c; }
+html.apx-dark .login_left { filter: brightness(0.72) saturate(0.85); }
+html.apx-dark img#CaptchaImage {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Tailwind class remaps (AIUB+ React components use utility classes)
+   ------------------------------------------------------------------------- */
+html.apx-dark .text-slate-900 { color: #e8edf4 !important; }
+html.apx-dark .text-slate-800 { color: #dde5f0 !important; }
+html.apx-dark .text-slate-700 { color: #c3cfdf !important; }
+html.apx-dark .text-slate-600 { color: #a9b6c8 !important; }
+html.apx-dark .text-slate-500 { color: #8b9aad !important; }
+html.apx-dark .text-slate-400 { color: #6d7d94 !important; }
+html.apx-dark .text-slate-300 { color: #6d7d94 !important; }
+
+html.apx-dark .text-sky-900   { color: #b5d6ff !important; }
+html.apx-dark .text-sky-700   { color: #7cb8e8 !important; }
+html.apx-dark .text-sky-600   { color: #7cb8e8 !important; }
+html.apx-dark .text-sky-500   { color: #64b5f6 !important; }
+html.apx-dark .text-blue-800  { color: #9cccff !important; }
+html.apx-dark .text-blue-700  { color: #8cc7ff !important; }
+html.apx-dark .text-blue-600  { color: #64b5f6 !important; }
+html.apx-dark .text-blue-500  { color: #64b5f6 !important; }
+html.apx-dark .text-indigo-600{ color: #a5b4fc !important; }
+html.apx-dark .text-emerald-700 { color: #63d68f !important; }
+html.apx-dark .text-emerald-600 { color: #63d68f !important; }
+html.apx-dark .text-emerald-500 { color: #4cd49a !important; }
+html.apx-dark .text-green-700 { color: #63d68f !important; }
+html.apx-dark .text-green-600 { color: #63d68f !important; }
+html.apx-dark .text-green-500 { color: #4cd49a !important; }
+html.apx-dark .text-red-600   { color: #f28b8b !important; }
+html.apx-dark .text-red-500   { color: #f28b8b !important; }
+html.apx-dark .text-rose-600  { color: #f8a0b0 !important; }
+html.apx-dark .text-amber-900 { color: #e5c558 !important; }
+html.apx-dark .text-amber-700 { color: #e5c558 !important; }
+html.apx-dark .text-amber-600 { color: #edc258 !important; }
+html.apx-dark .text-cyan-600  { color: #4ad0c0 !important; }
+html.apx-dark .text-violet-600{ color: #c3a6f5 !important; }
+html.apx-dark .text-orange-600{ color: #f0a35c !important; }
+
+html.apx-dark .bg-white { background-color: #1c2534 !important; }
+html.apx-dark .bg-white\/40 { background-color: rgba(28, 37, 52, 0.4) !important; }
+html.apx-dark .bg-white\/50 { background-color: rgba(28, 37, 52, 0.5) !important; }
+html.apx-dark .bg-white\/60 { background-color: rgba(28, 37, 52, 0.6) !important; }
+html.apx-dark .bg-white\/70 { background-color: rgba(28, 37, 52, 0.7) !important; }
+html.apx-dark .bg-white\/80 { background-color: rgba(28, 37, 52, 0.8) !important; }
+html.apx-dark .bg-slate-50  { background-color: #151c28 !important; }
+html.apx-dark .bg-slate-100 { background-color: #1a2231 !important; }
+html.apx-dark .bg-slate-200 { background-color: #222c3e !important; }
+html.apx-dark .bg-slate-300 { background-color: #2a3547 !important; }
+html.apx-dark .bg-slate-900 { background-color: #10151d !important; }
+html.apx-dark .bg-blue-50   { background-color: #1b2434 !important; }
+html.apx-dark .bg-blue-100  { background-color: #22334a !important; }
+html.apx-dark .bg-sky-100   { background-color: #1c2e46 !important; }
+html.apx-dark .bg-sky-200   { background-color: #25405e !important; }
+html.apx-dark .bg-emerald-50  { background-color: #14251b !important; }
+html.apx-dark .bg-emerald-100 { background-color: #1a2f22 !important; }
+html.apx-dark .bg-amber-50    { background-color: #2e2712 !important; }
+html.apx-dark .bg-amber-50\/60{ background-color: rgba(46, 39, 18, 0.6) !important; }
+html.apx-dark .bg-amber-200   { background-color: #453b1e !important; }
+html.apx-dark .bg-amber-300   { background-color: #52431f !important; }
+html.apx-dark .bg-amber-400   { background-color: #c8a21f !important; }
+html.apx-dark .bg-red-50      { background-color: #2e1a1c !important; }
+html.apx-dark .bg-red-100     { background-color: #3a2226 !important; }
+html.apx-dark .bg-rose-50     { background-color: #2e1a20 !important; }
+html.apx-dark .bg-purple-50   { background-color: #231a33 !important; }
+html.apx-dark .bg-indigo-50   { background-color: #1d2440 !important; }
+html.apx-dark .hover\:bg-slate-50:hover  { background-color: #1a2231 !important; }
+html.apx-dark .hover\:bg-slate-100:hover { background-color: #222c3e !important; }
+html.apx-dark .hover\:bg-white\/60:hover { background-color: rgba(30, 40, 57, 0.6) !important; }
+
+html.apx-dark .border-slate-100 { border-color: #232e44 !important; }
+html.apx-dark .border-slate-200 { border-color: #2a3547 !important; }
+html.apx-dark .border-slate-200\/80 { border-color: rgba(42, 53, 71, 0.8) !important; }
+html.apx-dark .border-slate-300 { border-color: #38455c !important; }
+html.apx-dark .border-sky-100   { border-color: #25405e !important; }
+html.apx-dark .border-blue-100  { border-color: #22334a !important; }
+html.apx-dark .border-blue-200  { border-color: #2a3d5c !important; }
+html.apx-dark .border-blue-500  { border-color: #3b82f6 !important; }
+html.apx-dark .border-emerald-300 { border-color: #21402c !important; }
+html.apx-dark .border-emerald-400 { border-color: #2e7d43 !important; }
+html.apx-dark .border-yellow-200  { border-color: #453b1e !important; }
+html.apx-dark .border-amber-200   { border-color: #453b1e !important; }
+html.apx-dark .border-red-200     { border-color: #54262a !important; }
+
+/* Gradient endpoint utilities */
+html.apx-dark .from-white { --tw-gradient-from: #1c2534 var(--tw-gradient-from-position); }
+html.apx-dark .to-slate-50 { --tw-gradient-to: #151c28 var(--tw-gradient-to-position); }
+html.apx-dark .from-slate-50 { --tw-gradient-from: #151c28 var(--tw-gradient-from-position); }
+html.apx-dark .from-blue-50 { --tw-gradient-from: #1b2434 var(--tw-gradient-from-position); }
+html.apx-dark .via-white { --tw-gradient-via: #1c2534; }
+
+/* ---------------------------------------------------------------------------
+   3. AIUB+ Offered Courses filter panels (aiub-* classes from content.css)
+   ------------------------------------------------------------------------- */
+html.apx-dark #aiub-filter-panel .panel-body {
+  background: linear-gradient(135deg, #151e2e 0%, #1a2536 100%) !important;
+}
+html.apx-dark #aiub-results-container .panel-heading {
+  background: linear-gradient(to right, #1c2e46, #22334a) !important;
+  border-bottom-color: #2a3d5c !important;
+}
+html.apx-dark #aiub-results-container .panel-title { color: #8ec8f0 !important; }
+html.apx-dark .aiub-label,
+html.apx-dark .aiub-time-lbl { color: #7cb8e8 !important; }
+html.apx-dark #aiub-search {
+  border-color: #2e4058 !important;
+  background: #1a2231 !important;
+  color: #e7ecf3 !important;
+}
+html.apx-dark #aiub-search:focus { border-color: #64b5f6 !important; }
+html.apx-dark .aiub-status-btn { background: #1c2534; }
+html.apx-dark .aiub-day-btn { background: #1c2534; border-color: #2e4058; color: #64b5f6; }
+html.apx-dark .aiub-filter-divider { border-top-color: #2a3d5c !important; }
+html.apx-dark .aiub-time-pair .form-control {
+  border-color: #2e4058 !important;
+  background: #1a2231 !important;
+  color: #e7ecf3 !important;
+}
+html.apx-dark .aiub-time-arr { color: #485979; }
+html.apx-dark .aiub-rpp-wrap { color: #7cb8e8; }
+html.apx-dark .aiub-rpp-wrap select {
+  border-color: #2e4058;
+  background: #1a2231;
+  color: #9cccff;
+}
+html.apx-dark #aiub-results-container .table th {
+  background: linear-gradient(to right, #1c2e46, #22334a) !important;
+  color: #8ec8f0 !important;
+  border-bottom-color: #2a3d5c !important;
+}
+html.apx-dark #aiub-results-container .table td {
+  border-color: #22304a !important;
+  color: #b7c2d2 !important;
+}
+html.apx-dark #aiub-results-container .table-striped > tbody > tr:nth-of-type(odd) {
+  background: linear-gradient(135deg, #16202e, #182334) !important;
+}
+html.apx-dark #aiub-results-container .table-striped > tbody > tr:nth-of-type(even) {
+  background: #151c28 !important;
+}
+html.apx-dark #aiub-results-container .table > tbody > tr:hover {
+  background: linear-gradient(135deg, #1e2839, #22334a) !important;
+}
+html.apx-dark .aiub-status-default { background: #1a2231; color: #8b9aad; }
+html.apx-dark .aiub-status-freshman  { background: #22334a; color: #9db8e8; }
+html.apx-dark .aiub-status-sophomore { background: #1a2f22; color: #63d68f; }
+html.apx-dark .aiub-status-junior    { background: #2b2140; color: #c3a6f5; }
+html.apx-dark .aiub-status-senior    { background: #383018; color: #e5c558; }
+html.apx-dark .aiub-seats-full { color: #f28b8b; background: #3a2226; }
+html.apx-dark .aiub-seats-ok   { color: #63d68f; background: #1a2f22; }
+html.apx-dark .aiub-count-high { color: #e5c558 !important; background: #383018 !important; }
+html.apx-dark .aiub-slot { background: #17202e; border-color: #25405e; }
+html.apx-dark .aiub-slot-day { color: #7cb8e8; }
+html.apx-dark .aiub-slot-room {
+  color: #7cb8e8;
+  background: rgba(13, 20, 33, 0.6);
+  border-color: #25405e;
+}
+html.apx-dark .aiub-selected-card {
+  background: linear-gradient(135deg, #151e2e 0%, #1a2536 100%);
+  border-color: #2a3d5c;
+}
+html.apx-dark .aiub-sc-title { color: #dde5f0; }
+html.apx-dark .aiub-sc-schedule span { color: #7cb8e8; background: #17202e; border-color: #25405e; }
+html.apx-dark .aiub-sc-status { background: #22334a; color: #9db8e8; }
+html.apx-dark .aiub-sc-seats { color: #63d68f; background: #1a2f22; }
+html.apx-dark .aiub-sc-alt-box { border-color: #2a3d5c; background: #1c2534; }
+html.apx-dark .aiub-sc-alt-header {
+  color: #7cb8e8;
+  background: linear-gradient(to right, #1c2e46, #22334a);
+  border-bottom-color: #2a3d5c;
+}
+html.apx-dark .aiub-sc-alt-row,
+html.apx-dark .aiub-sc-alt-selected-row { border-bottom-color: #22304a; }
+html.apx-dark .aiub-sc-alt-selected-row { background: #14251b; }
+html.apx-dark .aiub-sc-alt-sec { color: #c3cfdf; }
+html.apx-dark .aiub-sc-alt-sched { color: #8b9aad; }
+html.apx-dark .aiub-sc-remove { border-color: #54262a; background: #2e1a1c; color: #f28b8b; }
+html.apx-dark #aiub-results-container .panel-footer {
+  background: linear-gradient(to right, #17202e, #1b2434) !important;
+  border-top-color: #2a3d5c !important;
+}
+html.apx-dark #aiub-results-container .panel-footer .pagination > li > a,
+html.apx-dark #aiub-results-container .panel-footer .pagination > li > span {
+  color: #64b5f6 !important;
+  border-color: #38455c !important;
+  background: #1a2231 !important;
+}
+html.apx-dark .aiub-page-label { color: #7cb8e8; }
+html.apx-dark .aiub-badge-results { background: #22334a; color: #9db8e8; border-color: #2e4058; }
+
+/* ---------------------------------------------------------------------------
+   4. Notification center & navbar extras (higher specificity than the
+      injected <style> in Navbar.jsx, which loads after this stylesheet)
+   ------------------------------------------------------------------------- */
+html.apx-dark #notifications {
+  background: rgba(20, 27, 40, 0.92) !important;
+  border: solid 1px #38455c !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.55) !important;
+}
+html.apx-dark #notifications h3 {
+  color: #e7ecf3 !important;
+  background: transparent !important;
+  border-bottom: solid 1px #2a3547 !important;
+}
+html.apx-dark #notifications h3 a { color: #64b5f6 !important; }
+html.apx-dark #notifications div[style*="lightblue"] {
+  background-color: #22334a !important;
+  color: #cfe3ff !important;
+}
+html.apx-dark #notifications div[ng-repeat] .row,
+html.apx-dark #notifications div[ng-repeat]:nth-child(even) .row,
+html.apx-dark #notifications div[ng-repeat]:nth-child(odd) .row {
+  background: #22334a !important;
+  color: #cfe3ff !important;
+}
+html.apx-dark #notifications div[ng-repeat] .row:hover {
+  background: #2a3d5c !important;
+}
+html.apx-dark #notifications .seeAll {
+  background: #1a2231 !important;
+  border-top: solid 1px #2a3547 !important;
+}
+html.apx-dark #notifications .seeAll a { color: #64b5f6 !important; }
+html.apx-dark #noti_Counter { border-color: #101724 !important; }
+
+/* Custom AIUB Notices dropdown */
+html.apx-dark #aiub_custom_notices_btn {
+  background: linear-gradient(135deg, #1c2e46 0%, #25405e 100%) !important;
+  border: 1px solid #2e4058 !important;
+  color: #9cccff !important;
+}
+html.apx-dark #aiub_custom_notices_btn:hover {
+  background: linear-gradient(135deg, #25405e 0%, #2e4f74 100%) !important;
+  border-color: #3b5b85 !important;
+}
+html.apx-dark #aiub_custom_notices_btn span { color: #9cccff !important; }
+html.apx-dark #aiub_custom_notices_icon_wrapper { color: #64b5f6 !important; }
+html.apx-dark #aiub_custom_notices_dropdown {
+  background: rgba(20, 27, 40, 0.95) !important;
+  border: 1px solid #38455c !important;
+}
+html.apx-dark #aiub_custom_notices_dropdown > div:first-child {
+  color: #e7ecf3 !important;
+  border-bottom-color: #2a3547 !important;
+}
+html.apx-dark #aiub_custom_notices_close { color: #64b5f6 !important; }
+html.apx-dark #aiub_custom_notices_list a {
+  background: #22334a !important;
+}
+html.apx-dark #aiub_custom_notices_list a:hover { background: #2a3d5c !important; }
+html.apx-dark #aiub_custom_notices_list a div:first-child { color: #cfe3ff !important; }
+html.apx-dark #aiub_custom_notices_list a div:last-child { color: #8b9aad !important; }
+html.apx-dark #aiub_custom_notices_list > div { color: #8b9aad !important; }
+
+/* Settings dropdown in navbar */
+html.apx-dark .dropdown-menu { background-color: #1e2839 !important; border-color: #38455c !important; }
+
+/* ---------------------------------------------------------------------------
+   5. Print — always print with the original light look
+   ------------------------------------------------------------------------- */
+@media print {
+  html.apx-dark, html.apx-dark body { background: #fff !important; color: #000 !important; }
+  html.apx-dark a { color: #02baf2 !important; }
+  html.apx-dark h1, html.apx-dark h2, html.apx-dark h3, html.apx-dark h4,
+  html.apx-dark h5, html.apx-dark h6, html.apx-dark p,
+  html.apx-dark td, html.apx-dark th { color: #000 !important; background: transparent !important; }
+  html.apx-dark .table > thead > tr > th { background: transparent !important; }
+  html.apx-dark .table-bordered,
+  html.apx-dark .table-bordered td,
+  html.apx-dark .table-bordered th { border-color: #ddd !important; }
+  html.apx-dark .panel { background: #fff !important; border-color: #d6e1e5 !important; }
+  html.apx-dark .panel-default > .panel-heading { background-color: #004EA2 !important; color: #fff !important; }
+  html.apx-dark .navbar, html.apx-dark #navigation-bar,
+  html.apx-dark .modal-backdrop, html.apx-dark #dvLoading { display: none !important; }
+}

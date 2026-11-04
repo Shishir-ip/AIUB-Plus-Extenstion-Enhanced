@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Build output (published as GitHub Release assets instead)
+dist/
+
+# OS artifacts
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

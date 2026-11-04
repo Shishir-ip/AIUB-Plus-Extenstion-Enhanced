@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 340px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 10% 5%, #ffffff 0%, #ecf3ff 46%, #deebff 100%);
+  color: #20314f;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+}
+
+html:has(body.popup-body) {
+  width: 360px;
+  height: 550px;
+  overflow: hidden;
+}
+
+.popup-body {
+  width: 360px;
+  height: 550px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.popup-body #root {
+  padding: 0;
+}
+
+/* Custom Scrollbar for Popup */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #93c5fd; /* Light blue */
+  border-radius: 10px;
+  border: 2px solid #f8fafc; /* Padding trick */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #60a5fa; 
+}

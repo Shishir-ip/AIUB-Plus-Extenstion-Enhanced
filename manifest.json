@@ -1,0 +1,261 @@
+{
+  "manifest_version": 3,
+  "name": "AIUB Portal+ Enhanced",
+  "short_name": "AIUB+",
+  "description": "AIUB Student Portal enhancement suite with a full dark mode (Light/Dark/System), course filters, clash detection, grade analytics, schedule tools and UI improvements.",
+  "version": "3.7.0",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://portal.aiub.edu/*",
+    "https://aiub.edu/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "background": {
+    "service_worker": "src/background/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "logo/icon16.png",
+      "48": "logo/icon48.png",
+      "128": "logo/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "logo/icon16.png",
+    "48": "logo/icon48.png",
+    "128": "logo/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://portal.aiub.edu/",
+        "https://portal.aiub.edu/?*",
+        "https://portal.aiub.edu/Account/Login*",
+        "https://portal.aiub.edu/Login*"
+      ],
+      "js": [
+        "src/components/shared/themeBridge.js",
+        "src/components/login/CaptchaSolver.js"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student*"
+      ],
+      "js": [
+        "src/components/shared/contentBridge.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student*"
+      ],
+      "js": [
+        "src/components/shared/Sidebar.jsx",
+        "src/components/shared/Navbar.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student",
+        "https://portal.aiub.edu/Student/",
+        "https://portal.aiub.edu/Student/Home/*"
+      ],
+      "js": [
+        "src/components/home/Intro.jsx",
+        "src/components/home/ClassSchedule.jsx",
+        "src/components/home/HomeRegistration.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Section/Offered*"
+      ],
+      "js": [
+        "src/components/content/OfferedFilters.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Course?*"
+      ],
+      "js": [
+        "src/components/academic/CourseAndResults.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Registration?*"
+      ],
+      "js": [
+        "src/components/academic/AcademicRegistration.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Curriculum*"
+      ],
+      "js": [
+        "src/components/academic/MkCurriculumn.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Accounts*"
+      ],
+      "js": [
+        "src/components/academic/Financials.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Adrop/DropApplication*"
+      ],
+      "js": [
+        "src/components/academic/DropApplication.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/ExamRoutineSchedule*"
+      ],
+      "js": [
+        "src/components/academic/ExamRoutine.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/GradeReport/ByCurriculum*"
+      ],
+      "js": [
+        "src/components/grade/by_carriculum.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/GradeReport/BySemester*"
+      ],
+      "js": [
+        "src/components/grade/by_semester.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Credential/ChangePassword*"
+      ],
+      "js": [
+        "src/components/credential/ChangePassword.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Home/Profile*"
+      ],
+      "js": [
+        "src/components/content/ProfileContent.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://portal.aiub.edu/Student/Payment/List*"
+      ],
+      "js": [
+        "src/components/academic/OnlinePaymentHistory.jsx"
+      ],
+      "css": [
+        "src/theme.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "logo/icon16.png",
+        "logo/icon48.png",
+        "logo/icon128.png",
+        "logo/logo128.png",
+        "Academic/CSE.json",
+        "tesseract/worker.min.js",
+        "tesseract/tesseract-core-simd-lstm.wasm.js",
+        "tesseract/tesseract-core-simd-lstm.wasm",
+        "tesseract/langs/eng.traineddata.gz"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
