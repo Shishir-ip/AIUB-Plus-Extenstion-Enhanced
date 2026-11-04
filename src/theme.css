@@ -23,7 +23,6 @@
   --apx-c-2563eb: #2563eb;
   --apx-c-2f7be7: #2f7be7;
   --apx-c-34d399: #34d399;
-  --apx-c-3730a3: #3730a3;
   --apx-c-374151: #374151;
   --apx-c-3b0764: #3b0764;
   --apx-c-3b82f6: #3b82f6;
@@ -31,7 +30,6 @@
   --apx-c-475569: #475569;
   --apx-c-4b5563: #4b5563;
   --apx-c-4c1d95: #4c1d95;
-  --apx-c-4f46e5: #4f46e5;
   --apx-c-5b21b6: #5b21b6;
   --apx-c-60a5fa: #60a5fa;
   --apx-c-6366f1: #6366f1;
@@ -147,6 +145,7 @@
   --apx-t-2563eb: #2563eb;
   --apx-t-334155: #334155;
   --apx-t-334669: #334669;
+  --apx-t-3730a3: #3730a3;
   --apx-t-374151: #374151;
   --apx-t-3b82f6: #3b82f6;
   --apx-t-475569: #475569;
@@ -206,62 +205,60 @@ html.apx-dark {
   --apx-c-0284c7: #0284c7;
   --apx-c-0369a1: #0a5c94;
   --apx-c-059669: #0e7a52;
-  --apx-c-065f46: #1c2534;
+  --apx-c-065f46: #63d68f;
   --apx-c-06b6d4: #06b6d4;
   --apx-c-0ea5e9: #0ea5e9;
-  --apx-c-0f172a: #1c2534;
+  --apx-c-0f172a: #e8edf4;
   --apx-c-0f766e: #0f766e;
   --apx-c-10b981: #0f8f63;
-  --apx-c-111827: #1c2534;
-  --apx-c-15803d: #15803d;
-  --apx-c-166534: #166534;
+  --apx-c-111827: #e8edf4;
+  --apx-c-15803d: #63d68f;
+  --apx-c-166534: #63d68f;
   --apx-c-16a34a: #15803d;
   --apx-c-1a73c8: #1a73c8;
   --apx-c-1d4ed8: #1d4ed8;
-  --apx-c-1e293b: #1c2534;
-  --apx-c-1e3a5f: #1c2534;
+  --apx-c-1e293b: #dde5f0;
+  --apx-c-1e3a5f: #cfe0f5;
   --apx-c-1e3a8a: #1e3a8a;
   --apx-c-1e40af: #1e40af;
   --apx-c-22c55e: #16a34a;
   --apx-c-2563eb: #2563eb;
   --apx-c-2f7be7: #2f7be7;
   --apx-c-34d399: #0f8f63;
-  --apx-c-3730a3: #1c2534;
-  --apx-c-374151: #1c2534;
-  --apx-c-3b0764: #1c2534;
-  --apx-c-3b82f6: #1c2534;
+  --apx-c-374151: #c3cfdf;
+  --apx-c-3b0764: #c3a6f5;
+  --apx-c-3b82f6: #60a5fa;
   --apx-c-4338ca: #4338ca;
-  --apx-c-475569: #1c2534;
-  --apx-c-4b5563: #1c2534;
-  --apx-c-4c1d95: #1c2534;
-  --apx-c-4f46e5: #4f46e5;
-  --apx-c-5b21b6: #1c2534;
+  --apx-c-475569: #a9b6c8;
+  --apx-c-4b5563: #a9b6c8;
+  --apx-c-4c1d95: #c3a6f5;
+  --apx-c-5b21b6: #c3a6f5;
   --apx-c-60a5fa: #2e4058;
-  --apx-c-6366f1: #1c2534;
-  --apx-c-64748b: #1c2534;
-  --apx-c-6b7280: #1c2534;
-  --apx-c-6d28d9: #1c2534;
+  --apx-c-6366f1: #818cf8;
+  --apx-c-64748b: #8b9aad;
+  --apx-c-6b7280: #8b9aad;
+  --apx-c-6d28d9: #c3a6f5;
   --apx-c-6ee7b7: #1e4a2b;
   --apx-c-7c3aed: #6d31d0;
-  --apx-c-7e22ce: #1c2534;
-  --apx-c-7f1d1d: #1c2534;
+  --apx-c-7e22ce: #c3a6f5;
+  --apx-c-7f1d1d: #ef8a8a;
   --apx-c-8b5cf6: #7440d0;
   --apx-c-90a4ae: #38455c;
-  --apx-c-92400e: #1c2534;
+  --apx-c-92400e: #e5c558;
   --apx-c-93c5fd: #2e4058;
-  --apx-c-94a3b8: #1c2534;
-  --apx-c-991b1b: #1c2534;
-  --apx-c-9ca3af: #1c2534;
+  --apx-c-94a3b8: #6d7d94;
+  --apx-c-991b1b: #ef8a8a;
+  --apx-c-9ca3af: #6d7d94;
   --apx-c-a5d6fd: #2e4058;
   --apx-c-a7f3d0: #21402c;
   --apx-c-b45309: #9c5215;
   --apx-c-b91c1c: #9c3028;
   --apx-c-bae6fd: #25405e;
   --apx-c-bbf7d0: #21402c;
-  --apx-c-be123c: #1c2534;
-  --apx-c-be185d: #1c2534;
+  --apx-c-be123c: #f8a0a8;
+  --apx-c-be185d: #f8a0c8;
   --apx-c-bfdbfe: #2a3d5c;
-  --apx-c-c2410c: #1c2534;
+  --apx-c-c2410c: #f0a35c;
   --apx-c-c4b5fd: #3c3158;
   --apx-c-c7d2fe: #2e3c66;
   --apx-c-cbd5e1: #38455c;
@@ -276,7 +273,7 @@ html.apx-dark {
   --apx-c-ddd6fe: #342a4e;
   --apx-c-e0e7ff: #232e4a;
   --apx-c-e0f2fe: #1c2e46;
-  --apx-c-e11d48: #1c2534;
+  --apx-c-e11d48: #f8a0b0;
   --apx-c-e2e8f0: #2a3547;
   --apx-c-e53e3e: #c0392f;
   --apx-c-e5e7eb: #2a3547;
@@ -297,7 +294,7 @@ html.apx-dark {
   --apx-c-f1f5f9: #1a2231;
   --apx-c-f3e8ff: #2b2140;
   --apx-c-f3f4f6: #1a2231;
-  --apx-c-f43f5e: #1c2534;
+  --apx-c-f43f5e: #f8a0b0;
   --apx-c-f59e0b: #c88a1f;
   --apx-c-f5f3ff: #231a33;
   --apx-c-f5f5f5: #1a2231;
@@ -350,6 +347,7 @@ html.apx-dark {
   --apx-t-2563eb: #c3cfdf;
   --apx-t-334155: #c3cfdf;
   --apx-t-334669: #c3cfdf;
+  --apx-t-3730a3: #a5b4fc;
   --apx-t-374151: #c3cfdf;
   --apx-t-3b82f6: #60a5fa;
   --apx-t-475569: #a9b6c8;
@@ -992,4 +990,138 @@ html.apx-dark .dropdown-menu { background-color: #1e2839 !important; border-colo
   html.apx-dark .panel-default > .panel-heading { background-color: #004EA2 !important; color: #fff !important; }
   html.apx-dark .navbar, html.apx-dark #navigation-bar,
   html.apx-dark .modal-backdrop, html.apx-dark #dvLoading { display: none !important; }
+}
+
+/* ---------------------------------------------------------------------------
+   22. Portal global heading chips — the portal ships a global
+        `h3 { background: #FFF; color: #333 }` rule that paints white chips
+        behind every heading in dark mode. Neutralize it.
+   ------------------------------------------------------------------------- */
+html.apx-dark h1, html.apx-dark h2, html.apx-dark h3,
+html.apx-dark h4, html.apx-dark h5, html.apx-dark h6 {
+  background-color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   23. Bootstrap 3 paints striped rows on BOTH the tr and its td/th —
+        cover the td/th level too, or light strips leak through.
+   ------------------------------------------------------------------------- */
+html.apx-dark .table-striped > tbody > tr:nth-of-type(odd) > td,
+html.apx-dark .table-striped > tbody > tr:nth-of-type(odd) > th {
+  background-color: #171f2d !important;
+}
+html.apx-dark .table-striped > tbody > tr:nth-of-type(even) > td,
+html.apx-dark .table-striped > tbody > tr:nth-of-type(even) > th {
+  background-color: transparent !important;
+}
+html.apx-dark td,
+html.apx-dark th {
+  background-color: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   24. FullCalendar (portal weekly schedule grid on /Student/Section)
+        Events carry inline colors from portal JS — veil them with a dark
+        gradient so hues stay distinguishable but readable.
+   ------------------------------------------------------------------------- */
+html.apx-dark .fc {
+  background: transparent;
+}
+html.apx-dark .fc-widget-content,
+html.apx-dark .fc-view-container,
+html.apx-dark .fc-view,
+html.apx-dark .fc-day-grid,
+html.apx-dark .fc-time-grid,
+html.apx-dark .fc-slats,
+html.apx-dark .fc-slats td,
+html.apx-dark .fc-row,
+html.apx-dark .fc-bg,
+html.apx-dark .fc-highlight-skeleton {
+  background-color: transparent !important;
+}
+html.apx-dark .fc-unthemed th,
+html.apx-dark .fc-unthemed td,
+html.apx-dark .fc-unthemed thead,
+html.apx-dark .fc-unthemed tbody,
+html.apx-dark .fc-unthemed .fc-divider,
+html.apx-dark .fc-unthemed .fc-row,
+html.apx-dark .fc-unthemed .fc-content,
+html.apx-dark .fc-unthemed .fc-popover,
+html.apx-dark .fc-unthemed .fc-list-view,
+html.apx-dark .fc-unthemed .fc-list-heading td {
+  border-color: #2a3547 !important;
+}
+html.apx-dark .fc-axis,
+html.apx-dark .fc-time-grid .fc-slats td,
+html.apx-dark .fc-agenda-axis {
+  color: #b7c2d2 !important;
+}
+html.apx-dark .fc-day-header,
+html.apx-dark .fc-widget-header {
+  color: #dde5f0 !important;
+  background-color: transparent !important;
+}
+/* Dark veil over event colors — hue-preserving, text stays readable */
+html.apx-dark .fc-event {
+  background-image: linear-gradient(rgba(10, 16, 28, 0.7), rgba(10, 16, 28, 0.7)) !important;
+  color: #dfe9f6 !important;
+  border-color: rgba(13, 20, 33, 0.65) !important;
+  text-shadow: none !important;
+}
+html.apx-dark .fc-event .fc-time,
+html.apx-dark .fc-event .fc-title {
+  color: #dfe9f6 !important;
+}
+html.apx-dark .fc-today {
+  background-color: rgba(30, 107, 184, 0.12) !important;
+}
+html.apx-dark .fc-button {
+  color: #b7c2d2 !important;
+  background-color: #1a2231 !important;
+  border-color: #38455c !important;
+  background-image: none !important;
+}
+html.apx-dark .fc-button:hover,
+html.apx-dark .fc-button:focus {
+  color: #e7ecf3 !important;
+  background-color: #1e2839 !important;
+}
+html.apx-dark .fc-button-state-active {
+  color: #fff !important;
+  background-color: #1e6bb8 !important;
+  border-color: #175591 !important;
+}
+html.apx-dark .fc-toolbar h2 {
+  color: #e7ecf3 !important;
+}
+html.apx-dark .fc-today-button,
+html.apx-dark .fc-prev-button,
+html.apx-dark .fc-next-button {
+  background-image: none !important;
+  text-shadow: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   25. Misc dark polish
+   ------------------------------------------------------------------------- */
+/* Portal "text-left/white" helper rows (e.g. course teacher filter bar) */
+html.apx-dark #main-content .row {
+  background-color: transparent;
+}
+/* Labels/headings inside tables */
+html.apx-dark #main-content h5,
+html.apx-dark #main-content h4 {
+  background-color: transparent !important;
+  color: #dde5f0;
+}
+/* Form selects inside white bars */
+html.apx-dark #main-content select {
+  color: #e7ecf3;
+  background-color: #1a2231;
+  border-color: #38455c;
+}
+/* Bootstrap text helpers used by the portal */
+html.apx-dark .text-left, html.apx-dark .text-right, html.apx-dark .text-center {
+  /* no-op, keeps intent explicit */
 }

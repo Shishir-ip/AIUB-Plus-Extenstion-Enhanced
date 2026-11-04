@@ -170,9 +170,9 @@ function SummaryCards({ totalDebit, totalCredit, finalBalance }) {
         const dAmt = parseAmount(debitCell.textContent);
         const cAmt = parseAmount(creditCell.textContent);
         const bAmt = parseAmount(balCell.textContent);
-        debitCell.style.color = dAmt === 0 ? 'var(--apx-c-cbd5e1)' : 'var(--apx-c-ef4444)';
-        creditCell.style.color = cAmt === 0 ? 'var(--apx-c-cbd5e1)' : 'var(--apx-c-10b981)';
-        balCell.style.color = bAmt === 0 ? 'var(--apx-c-10b981)' : 'var(--apx-c-2563eb)';
+        debitCell.style.color = dAmt === 0 ? 'var(--apx-t-cbd5e1)' : 'var(--apx-t-ef4444)';
+        creditCell.style.color = cAmt === 0 ? 'var(--apx-t-cbd5e1)' : 'var(--apx-t-10b981)';
+        balCell.style.color = bAmt === 0 ? 'var(--apx-t-10b981)' : 'var(--apx-t-2563eb)';
 
         const modalLink = partCell.querySelector('a[data-toggle="modal"]');
         if (modalLink) {

@@ -91,7 +91,7 @@ function applyIntroCardDesign(contentWrap) {
         td.style.cssText = `
           border-color: var(--apx-c-e2e8f0) !important;
           padding: 10px 12px !important;
-          color: ${isValue ? 'var(--apx-c-0f172a)' : 'var(--apx-c-1e3a8a)'} !important;
+          color: ${isValue ? 'var(--apx-t-0f172a)' : 'var(--apx-t-1e3a8a)'} !important;
           font-size: 13px !important;
           font-weight: ${isValue ? '700' : '600'} !important;
           background: transparent !important;

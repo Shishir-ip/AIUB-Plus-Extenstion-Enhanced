@@ -126,9 +126,9 @@
             link.addEventListener('mouseleave', function () {
               const isExpanded = this.getAttribute('aria-expanded') === 'true';
               this.style.background = isExpanded ? 'rgba(37, 99, 235, 0.15) !important' : 'transparent !important';
-              this.style.color = isExpanded ? 'var(--apx-c-1e3a8a) !important' : 'var(--apx-c-4b5563) !important';
+              this.style.color = isExpanded ? 'var(--apx-t-1e3a8a) !important' : 'var(--apx-t-4b5563) !important';
               const fa = this.querySelector('.fa, .glyphicon');
-              if (fa) fa.style.color = isExpanded ? 'var(--apx-c-2563eb) !important' : 'var(--apx-c-9ca3af) !important';
+              if (fa) fa.style.color = isExpanded ? 'var(--apx-t-2563eb) !important' : 'var(--apx-t-9ca3af) !important';
             });
 
             // Style icon 

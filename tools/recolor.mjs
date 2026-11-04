@@ -64,7 +64,7 @@ const DARK_BG = {
   '#0369a1': '#0a5c94', '#0284c7': '#0284c7', '#0ea5e9': '#0ea5e9', '#06b6d4': '#06b6d4',
   '#dc2626': '#c0392f', '#ef4444': '#d0524e', '#e53e3e': '#c0392f', '#b91c1c': '#9c3028',
   '#059669': '#0e7a52', '#10b981': '#0f8f63', '#16a34a': '#15803d',
-  '#15803d': '#15803d', '#166534': '#166534', '#22c55e': '#16a34a', '#34d399': '#0f8f63',
+  '#22c55e': '#16a34a', '#34d399': '#0f8f63',
   '#d97706': '#b3651c', '#b45309': '#9c5215', '#f59e0b': '#c88a1f',
   '#fbbf24': '#c8a21f', '#fcd34d': '#c8a21f',
   '#8b5cf6': '#7440d0', '#a855f7': '#8b47d6', '#7c3aed': '#6d31d0', '#9333ea': '#7440d0',
@@ -208,9 +208,13 @@ function generateThemeCss() {
     }
     const n = norm(hex);
     const lightVal = n;
-    const darkVal = (role === 'c' ? DARK_BG : DARK_TEXT)[n];
+    // Background-role fallback: if the hex is a known ink/text color, prefer
+    // its bright dark-text value — ternaries interpolate ink colors into
+    // `color:` contexts (e.g. `color: ${isToday ? '#1e3a5f' : '#374151'}`),
+    // and a #1c2534 fallback there would be invisible on dark backgrounds.
+    const darkVal = (role === 'c' ? DARK_BG : DARK_TEXT)[n] ?? DARK_TEXT[n] ?? (role === 'c' ? '#1c2534' : '#c3cfdf');
     light.push(`  --apx-${role}-${n.slice(1)}: ${lightVal};`);
-    dark.push(`  --apx-${role}-${n.slice(1)}: ${darkVal || (role === 'c' ? '#1c2534' : '#c3cfdf')};`);
+    dark.push(`  --apx-${role}-${n.slice(1)}: ${darkVal};`);
   }
   void norm;
 
