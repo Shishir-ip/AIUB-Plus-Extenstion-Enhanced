@@ -6,40 +6,31 @@ import { BiLoaderAlt } from 'react-icons/bi';
 
 function parseMath(text) {
   console.log('[AIUB+] OCR raw:', JSON.stringify(text));
-  
-  let prep = text.split('=')[0]; 
-  
-  prep = prep
-    .replace(/[oO@DdQCcU]/g, '0')
-    .replace(/[lI|!i]/g,   '1')
-    .replace(/[Zz]/g,     '2')
-    .replace(/[JjE]/g,    '3')
-    .replace(/[AahHy]/g,  '4')
-    .replace(/[Ss$]/g,    '5')
-    .replace(/[G]/g,      '6')
-    .replace(/[Tt]/g,     '7')
-    .replace(/[BbR]/g,    '8')
-    .replace(/[gPpq]/g,   '9')
-    .replace(/\s+/g, ''); 
-    
-  // console.log('[AIUB+] Prepared:', JSON.stringify(prep));
-  
+
+  let prep = text.split('=')[0];
+
+  /* The classifier whitelist keeps OCR output to digits and operators, so no
+     letter→digit guessing is needed here. The upstream map forced misreads
+     into digits (b→8, S→5, E→3…) which filled WRONG answers — a clean
+     failure is better: it just refreshes and retries with a new CAPTCHA. */
+  prep = prep.replace(/[^0-9+\-]/g, '');
+
   const re = /^(\d{1,2})([+-])(\d{1,2})$/;
   const match = prep.match(re);
-  
+
   if (!match) return null;
-  
+
   const a = parseInt(match[1], 10);
   const operator = match[2];
   const b = parseInt(match[3], 10);
-  
+
   // Compute and enforce bounds
   const result = operator === '+' ? (a + b) : (a - b);
-  
+
   if (result >= 0 && result <= 100) {
     return result;
   }
-  
+
   return null;
 }
 
@@ -56,6 +47,13 @@ async function getTesseractWorker() {
     gzip: true,
     logger: m => console.log('[Tesseract]', m.status, Math.round(m.progress * 100) + '%')
   });
+  /* Restrict the classifier to the characters a CAPTCHA equation can contain.
+     Without this, digits get misread as letters and the legacy letter→digit
+     map turns a misread into a WRONG answer instead of a failed attempt. */
+  await _tesseractWorker.setParameters({
+    tessedit_char_whitelist: '0123456789+-=?',
+    tessedit_pageseg_mode: '7', // treat the image as a single text line
+  });
   return _tesseractWorker;
 }
 
@@ -68,8 +66,8 @@ function getImageBase64() {
   const img = document.getElementById(IMG_ID);
   if (!img) return null;
 
-  const w = img.width * 4;
-  const h = img.height * 4;
+  const w = (img.naturalWidth || img.width) * 4;
+  const h = (img.naturalHeight || img.height) * 4;
 
   const canvas = document.createElement('canvas');
   canvas.width  = w;
@@ -268,7 +266,12 @@ async function attemptSolve() {
     const worker = await getTesseractWorker();
     const result = await worker.recognize(dataUrl);
     const rawText = (result.data.text || '').trim();
-    
+    /* NOTE: tesseract.js v7 reports data.confidence as 0 (moved to blocks),
+       so a confidence gate is unusable — correctness comes from the strict
+       equation parse instead: anything that doesn't cleanly match
+       "num op num" is discarded and the CAPTCHA refreshes for another try. */
+    console.log('[AIUB+] OCR result:', JSON.stringify(rawText));
+
     if (!rawText) {
       handleFail('OCR returned empty text', dataUrl, img);
       return;
