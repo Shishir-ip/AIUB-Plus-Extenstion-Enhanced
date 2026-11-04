@@ -179,7 +179,7 @@ function SelectedCard({ sec, allCourses, selected, onRemove }) {
 
   return (
     <div className="relative rounded-2xl border transition-all duration-200 hover:-translate-y-1"
-      style={{ background: 'var(--apx-c-ffffff)', borderColor: 'var(--apx-t-e2e8f0)', boxShadow: '0 4px 24px rgba(0,0,0,0.03)', padding: '20px', minWidth: '280px', flex: '1 1 280px', maxWidth: '400px' }}>
+      style={{ background: 'var(--apx-c-ffffff)', borderColor: 'var(--apx-c-e2e8f0)', boxShadow: '0 4px 24px rgba(0,0,0,0.03)', padding: '20px', minWidth: '280px', flex: '1 1 280px', maxWidth: '400px' }}>
 
       {/* Header with course title */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '16px', paddingRight: '28px' }}>
@@ -249,8 +249,8 @@ function SelectedCard({ sec, allCourses, selected, onRemove }) {
       <button onClick={() => onRemove(sec.classId)}
         className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-150 hover:shadow-md"
         style={{ background: 'var(--apx-c-fef2f2)', border: '1px solid var(--apx-c-fecdd3)', color: 'var(--apx-t-dc2626)' }}
-        onMouseEnter={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-ef4444)', color: 'var(--apx-t-ffffff)', borderColor: 'var(--apx-t-ef4444)' })}
-        onMouseLeave={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-fef2f2)', color: 'var(--apx-t-dc2626)', borderColor: 'var(--apx-t-fecdd3)' })}
+        onMouseEnter={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-ef4444)', color: 'var(--apx-t-ffffff)', borderColor: 'var(--apx-c-ef4444)' })}
+        onMouseLeave={e => Object.assign(e.currentTarget.style, { background: 'var(--apx-c-fef2f2)', color: 'var(--apx-t-dc2626)', borderColor: 'var(--apx-c-fecdd3)' })}
         title="Remove course"
       ><FiX size={18} /></button>
     </div>
@@ -310,7 +310,7 @@ function RoutineModal({ selected, allCourses, onClose }) {
       }
 
       const canvas = await html2canvas(node, {
-        backgroundColor: 'var(--apx-t-ffffff)',
+        backgroundColor: 'var(--apx-c-ffffff)',
         scale: 2,
         logging: false,
         windowHeight: node.scrollHeight
@@ -667,7 +667,7 @@ export default function OfferedCoursesFilter({ allCourses = [], statuses = [], o
                                                     ['var(--apx-c-9ca3af)', 'var(--apx-c-6b7280)', 'linear-gradient(135deg,var(--apx-c-4b5563),var(--apx-c-6b7280))'];
     return activeStatuses.includes(s)
       ? { background: activeBg, color:'var(--apx-t-ffffff)', borderColor: 'transparent', boxShadow: `0 2px 8px ${border}55` }
-      : { background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-475569)', borderColor: 'var(--apx-t-e2e8f0)' };
+      : { background: 'var(--apx-c-f8fafc)', color: 'var(--apx-t-475569)', borderColor: 'var(--apx-c-e2e8f0)' };
   }
 
   // Pagination 
@@ -771,8 +771,8 @@ export default function OfferedCoursesFilter({ allCourses = [], statuses = [], o
                 onChange={e => { setSearch(e.target.value); setPage(1); }}
                 className="w-full text-[13px] px-4 py-2.5 transition-all"
                 style={{ border: '1.5px solid var(--apx-c-bfdbfe)', borderRadius: '10px', background: 'var(--apx-c-ffffff)', outline: 'none', color: 'var(--apx-t-1e293b)', fontWeight: 500 }}
-                onFocus={e => Object.assign(e.target.style, { borderColor: 'var(--apx-t-2563eb)', boxShadow: '0 0 0 3px rgba(37,99,235,0.1)' })}
-                onBlur={e  => Object.assign(e.target.style, { borderColor: 'var(--apx-t-bfdbfe)', boxShadow: 'none' })}
+                onFocus={e => Object.assign(e.target.style, { borderColor: 'var(--apx-c-2563eb)', boxShadow: '0 0 0 3px rgba(37,99,235,0.1)' })}
+                onBlur={e  => Object.assign(e.target.style, { borderColor: 'var(--apx-c-bfdbfe)', boxShadow: 'none' })}
               />
            </div>
 

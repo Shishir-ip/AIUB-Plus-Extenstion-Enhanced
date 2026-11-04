@@ -463,7 +463,7 @@ function NotAttemptedSection({ semSections, electiveRows, departmentName }) {
 
   if (!tabs.length && !searchResults.length) {
     return (
-      <div className="rounded-xl p-4 mb-6 border-2" style={{ background: 'var(--apx-c-f0fdf4)', borderColor: 'var(--apx-t-10b981)' }}>
+      <div className="rounded-xl p-4 mb-6 border-2" style={{ background: 'var(--apx-c-f0fdf4)', borderColor: 'var(--apx-c-10b981)' }}>
         <div className="text-center text-white text-[14px] font-extrabold rounded-lg py-4" style={{ background: 'var(--apx-c-10b981)' }}>
           ✅ All courses completed!
         </div>
@@ -522,7 +522,7 @@ function NotAttemptedSection({ semSections, electiveRows, departmentName }) {
       </div>
 
       {enabled && open && (
-        <div className="p-4 pt-5 border-t" style={{ borderColor: 'var(--apx-t-fcd34d)' }}>
+        <div className="p-4 pt-5 border-t" style={{ borderColor: 'var(--apx-c-fcd34d)' }}>
           {/* Search Input & Filter */}
           <div className="mb-4 flex gap-3">
         <div style={{ position: 'relative', flex: 1 }}>
@@ -858,7 +858,7 @@ function CurriculumGradeReport({ infoItems, semSections, electiveRows, printHref
           <a
             href={printHref}
             className="text-[11px] font-semibold text-white rounded-lg px-3 py-2 no-underline transition-all shadow-sm hover:shadow-md whitespace-nowrap border"
-            style={{ background: 'linear-gradient(to right, var(--apx-c-0284c7), var(--apx-c-0369a1))', borderColor: 'var(--apx-t-0369a1)' }}
+            style={{ background: 'linear-gradient(to right, var(--apx-c-0284c7), var(--apx-c-0369a1))', borderColor: 'var(--apx-c-0369a1)' }}
           >
             🖨 Print
           </a>

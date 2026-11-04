@@ -172,7 +172,6 @@
   --apx-t-d97706: #d97706;
   --apx-t-dc2626: #dc2626;
   --apx-t-e11d48: #e11d48;
-  --apx-t-e2e8f0: #e2e8f0;
   --apx-t-e53e3e: #e53e3e;
   --apx-t-ef4444: #ef4444;
   --apx-t-eff6ff: #eff6ff;
@@ -180,8 +179,6 @@
   --apx-t-f59e0b: #f59e0b;
   --apx-t-f8fafc: #f8fafc;
   --apx-t-fca5a5: #fca5a5;
-  --apx-t-fcd34d: #fcd34d;
-  --apx-t-fecdd3: #fecdd3;
   --apx-t-fef2f2: #fef2f2;
   --apx-t-ffffff: #ffffff;
   --apx-ov-10: rgba(255, 255, 255, 0.1);
@@ -374,7 +371,6 @@ html.apx-dark {
   --apx-t-d97706: #edc258;
   --apx-t-dc2626: #f28b8b;
   --apx-t-e11d48: #f8a0b0;
-  --apx-t-e2e8f0: #c3cfdf;
   --apx-t-e53e3e: #c3cfdf;
   --apx-t-ef4444: #c3cfdf;
   --apx-t-eff6ff: #c3cfdf;
@@ -382,8 +378,6 @@ html.apx-dark {
   --apx-t-f59e0b: #c3cfdf;
   --apx-t-f8fafc: #c3cfdf;
   --apx-t-fca5a5: #c3cfdf;
-  --apx-t-fcd34d: #c3cfdf;
-  --apx-t-fecdd3: #c3cfdf;
   --apx-t-fef2f2: #c3cfdf;
   --apx-t-ffffff: #ffffff;
   --apx-ov-10: rgba(13, 20, 33, 0.1);
@@ -1124,4 +1118,60 @@ html.apx-dark #main-content select {
 /* Bootstrap text helpers used by the portal */
 html.apx-dark .text-left, html.apx-dark .text-right, html.apx-dark .text-center {
   /* no-op, keeps intent explicit */
+}
+
+/* ---------------------------------------------------------------------------
+   26. Arbitrary Tailwind color classes (text-[#…], bg-[#…], border-[#…])
+        used by AIUB+ components — remap the ink/pastel ones for dark mode.
+   ------------------------------------------------------------------------- */
+html.apx-dark .text-\[\#0f172a\] { color: #e8edf4 !important; }
+html.apx-dark .text-\[\#1e293b\] { color: #dde5f0 !important; }
+html.apx-dark .text-\[\#334669\] { color: #c3cfdf !important; }
+html.apx-dark .text-\[\#475569\] { color: #a9b6c8 !important; }
+html.apx-dark .text-\[\#64748b\] { color: #8b9aad !important; }
+html.apx-dark .text-\[\#94a3b8\] { color: #6d7d94 !important; }
+html.apx-dark .text-\[\#16a34a\] { color: #63d68f !important; }
+html.apx-dark .border-\[\#e2e8f0\] { border-color: #2a3547 !important; }
+html.apx-dark .border-\[\#f1f5f9\] { border-color: #232e44 !important; }
+html.apx-dark .border-\[\#bfdbfe\] { border-color: #2e4058 !important; }
+html.apx-dark .bg-\[\#f0fdf4\] { background-color: #14251b !important; }
+html.apx-dark .bg-\[\#eef2f9\] { background-color: #1c2534 !important; }
+html.apx-dark .bg-\[\#dcfce7\] { background-color: #1a2f22 !important; }
+
+/* ---------------------------------------------------------------------------
+   27. Panel variant headings (info/success/warning/danger) — Bootstrap's
+        pastel backgrounds (#d9edf7 etc.) with near-white text were
+        unreadable (e.g. installment cards on Registration/Print).
+   ------------------------------------------------------------------------- */
+html.apx-dark .panel-info > .panel-heading {
+  color: #7fc8e8 !important;
+  background-color: #16303f !important;
+  border-color: #1c4557 !important;
+}
+html.apx-dark .panel-success > .panel-heading {
+  color: #8fd694 !important;
+  background-color: #1d3b28 !important;
+  border-color: #1e4a2b !important;
+}
+html.apx-dark .panel-warning > .panel-heading {
+  color: #e5c558 !important;
+  background-color: #3a3114 !important;
+  border-color: #4d3f1a !important;
+}
+html.apx-dark .panel-danger > .panel-heading {
+  color: #f08a8a !important;
+  background-color: #3a1a1a !important;
+  border-color: #54262a !important;
+}
+html.apx-dark .panel-info,
+html.apx-dark .panel-success,
+html.apx-dark .panel-warning,
+html.apx-dark .panel-danger {
+  border-color: #2a3547 !important;
+}
+html.apx-dark .panel-info > .panel-heading + .panel-collapse > .panel-body,
+html.apx-dark .panel-success > .panel-heading + .panel-collapse > .panel-body,
+html.apx-dark .panel-warning > .panel-heading + .panel-collapse > .panel-body,
+html.apx-dark .panel-danger > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #2a3547 !important;
 }

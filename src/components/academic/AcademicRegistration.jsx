@@ -163,7 +163,7 @@ function RegistrationRoutineModal({ courses, onClose }) {
       node.style.maxHeight = 'none';
       node.style.overflow = 'visible';
       if (tableWrapper) { tableWrapper.style.overflowY = 'visible'; tableWrapper.style.overflowX = 'visible'; }
-      const canvas = await html2canvas(node, { backgroundColor: 'var(--apx-t-ffffff)', scale: 2, logging: false, windowHeight: node.scrollHeight });
+      const canvas = await html2canvas(node, { backgroundColor: 'var(--apx-c-ffffff)', scale: 2, logging: false, windowHeight: node.scrollHeight });
       node.style.maxHeight = origMaxH;
       node.style.overflow = origOvf;
       if (tableWrapper) { tableWrapper.style.overflowY = origTableOvfY; tableWrapper.style.overflowX = origTableOvfX; }
@@ -594,7 +594,7 @@ function RegistrationView({ semOptions, printHref, creditItems, courses, fees, o
           {printHref && (
             <a 
               href={printHref} 
-              style={{ background: 'var(--apx-c-2563eb)', color: 'var(--apx-t-ffffff)', borderColor: 'var(--apx-t-1d4ed8)' }}
+              style={{ background: 'var(--apx-c-2563eb)', color: 'var(--apx-t-ffffff)', borderColor: 'var(--apx-c-1d4ed8)' }}
               className="text-[12px] font-semibold rounded-lg px-4 py-2 transition-all no-underline shadow-sm hover:shadow border flex items-center gap-1.5"
             >
               <FiPrinter size={14} strokeWidth="2.5" />
@@ -639,8 +639,8 @@ function RegistrationView({ semOptions, printHref, creditItems, courses, fees, o
               position: 'sticky', 
               top: 16, 
               alignSelf: 'start',
-              backgroundColor: 'var(--apx-t-f8fafc)',
-              borderColor: 'var(--apx-t-cbd5e1)',
+              backgroundColor: 'var(--apx-c-f8fafc)',
+              borderColor: 'var(--apx-c-cbd5e1)',
               borderWidth: '1px'
             }}
           >

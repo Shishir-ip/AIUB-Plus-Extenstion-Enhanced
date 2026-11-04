@@ -269,7 +269,7 @@ function SemesterGradeReport({ infoItems, semesters, printHref }) {
           <a
             href={printHref}
             className="text-[11px] font-semibold text-white rounded-lg px-3 py-2 no-underline transition-all shadow-sm hover:shadow-md whitespace-nowrap border"
-            style={{ background: 'linear-gradient(to right, var(--apx-c-0284c7), var(--apx-c-0369a1))', borderColor: 'var(--apx-t-0369a1)' }}
+            style={{ background: 'linear-gradient(to right, var(--apx-c-0284c7), var(--apx-c-0369a1))', borderColor: 'var(--apx-c-0369a1)' }}
           >
             🖨 Print
           </a>

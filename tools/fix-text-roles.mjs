@@ -27,9 +27,12 @@ for (const file of walk(SRC)) {
   let text = readFileSync(file, 'utf8');
   const before = text;
 
-  // 1. text-role property assignments and object keys
+  // 1. text-role property assignments and object keys.
+  //    The lookbehind anchors the property name so `backgroundColor:` /
+  //    `borderColor:` are never mistaken for text colors (only plain
+  //    `color` / `Color` / `WebkitTextFillColor` / `caret-color` count).
   text = text.replace(
-    /(color|Color|WebkitTextFillColor)\s*(:|=)\s*(['"])var\(--apx-c-([0-9a-f]{6})\)(\s*!important)?\3/g,
+    /(?<![A-Za-z])(color|Color|WebkitTextFillColor|caret-color)\s*(:|=)\s*(['"])var\(--apx-c-([0-9a-f]{6})\)(\s*!important)?\3/g,
     (full, prop, sep, q, hex, imp) => {
       fixes++;
       return `${prop}${sep}${q}var(--apx-t-${hex})${imp || ''}${q}`;
