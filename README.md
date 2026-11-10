@@ -15,9 +15,9 @@ A feature-complete enhancement suite for the
 | --- | --- |
 | ![Dashboard in dark mode](screenshots/dashboard-dark.png) | ![Course page in dark mode](screenshots/course-dark.png) |
 
-| Upload Document links restored | Popup with theme switcher |
+| Exam routine (dark) | Upload Document links restored |
 | --- | --- |
-| ![Upload links restored](screenshots/course-uploads-dark.png) | ![Popup](screenshots/popup.png) |
+| ![Exam routine in dark mode](screenshots/exam-dark.png) | ![Upload links restored](screenshots/course-uploads-dark.png) |
 
 ## ✨ What's enhanced in this fork
 
@@ -36,6 +36,10 @@ A feature-complete enhancement suite for the
   (`--apx-*`), so the redesigned UI and the underlying portal always share one
   palette per theme.
 - 🖨 **Print-safe** — printing keeps the original light look.
+
+#### 🆕 v3.7.4 highlights
+- 🖼️ **Navbar logo fixed in dark mode** — no more white box; the transparent logo renders as a clean light wordmark with the colorful AIUB seal on the dark navbar.
+- 📅 **Exam routine page fully dark** — the upcoming-exam highlight rows (white/light-green) are now dark green with readable countdowns.
 
 ### Everything from the original AIUB Portal+
 
