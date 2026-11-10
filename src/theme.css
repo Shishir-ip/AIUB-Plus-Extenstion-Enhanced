@@ -489,11 +489,14 @@ html.apx-dark .navbar-default .navbar-nav > li > a:hover {
   background-color: rgba(100, 181, 246, 0.08);
 }
 html.apx-dark .navbar-brand.logo {
-  background-color: #e9eef5;
-  border-radius: 10px;
-  margin-left: 8px;
-  margin-top: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-left: 4px !important;
+  margin-top: 2px !important;
+  /* logo PNG is transparent → recolor to a clean white wordmark */
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
 }
 
 /* Tables */
@@ -1137,6 +1140,13 @@ html.apx-dark .border-\[\#bfdbfe\] { border-color: #2e4058 !important; }
 html.apx-dark .bg-\[\#f0fdf4\] { background-color: #14251b !important; }
 html.apx-dark .bg-\[\#eef2f9\] { background-color: #1c2534 !important; }
 html.apx-dark .bg-\[\#dcfce7\] { background-color: #1a2f22 !important; }
+
+html.apx-dark [class*="even:bg-[#f0fdf4]"]:nth-child(even) {
+  background-color: #14251b !important;
+}
+html.apx-dark .hover\:bg-slate-50:hover {
+  background-color: #1e2839 !important;
+}
 
 /* ---------------------------------------------------------------------------
    27. Panel variant headings (info/success/warning/danger) — Bootstrap's
