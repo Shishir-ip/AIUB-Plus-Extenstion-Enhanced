@@ -489,14 +489,9 @@ html.apx-dark .navbar-default .navbar-nav > li > a:hover {
   background-color: rgba(100, 181, 246, 0.08);
 }
 html.apx-dark .navbar-brand.logo {
-  background-color: transparent !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  margin-left: 4px !important;
-  margin-top: 2px !important;
-  /* logo PNG is transparent → recolor to a clean white wordmark */
-  filter: brightness(0) invert(1);
-  opacity: 0.92;
+  /* transparent PNG: smart-invert makes the navy wordmark readable on dark
+     while keeping the colorful seal — no white box, no white silhouette */
+  filter: invert(1) hue-rotate(180deg);
 }
 
 /* Tables */
